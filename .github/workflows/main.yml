@@ -28,11 +28,12 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Zip Martini package
         run: |
-          zip -qr demo-api-tasks.zip packages/demo-api-tasks/*
-          ls -la
+          cd packages/demo-api-tasks
+          zip -qr ../../demo-api-tasks.zip *
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.3.1
         with:
+          name: demo-api-tasks.zip
           path: demo-api-tasks.zip
           if-no-files-found: error
