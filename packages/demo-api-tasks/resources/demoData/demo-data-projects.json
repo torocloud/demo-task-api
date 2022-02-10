@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Build product Gizmo",
+        "code": "gizmo",
+        "status": "In Progress",
+        "description": "Gizmo is the gadget that everyone is going to want.",
+        "deadLine": "08/15/2023"
+    },
+    {
+        "name": "Document Gizmo",
+        "code": "gizmodocs",
+        "status": "In Progress",
+        "description": "Technical documentation for using and maintaining Gizmo",
+        "deadLine": "08/15/2023"
+    },
+    {
+        "name": "Gizmo product launch",
+        "code": "gizmolaunch",
+        "status": "Not Started",
+        "description": "Launch event and PR activities",
+        "deadLine": "08/31/2023"
+    }
+]

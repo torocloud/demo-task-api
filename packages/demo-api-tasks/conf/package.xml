@@ -1,0 +1,7 @@
+<package stateOnStartup="unloaded" id="demo.api.tasks" version="0.0.12" context-path="/demo-api-tasks">
+  <package-dependencies/>
+  <startup-services>
+    <startup-service>gloop:demo_api_tasks.config.Setup/demo_api_tasks.config.Setup</startup-service>
+  </startup-services>
+  <shutdown-services/>
+</package>

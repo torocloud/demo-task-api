@@ -1,0 +1,186 @@
+{
+    "input": [
+        {
+            "name": "noteId",
+            "type": "integer"
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "note",
+                    "type": "model",
+                    "reference": "demo_api_tasks.models.Note"
+                }
+            ]
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.note.SelectNote",
+                    "inputs": [
+                        {
+                            "from": [
+                                "noteId"
+                            ],
+                            "to": [
+                                "selectNoteInput",
+                                "noteId"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectNoteOutput"
+                            ],
+                            "to": [
+                                "note"
+                            ]
+                        }
+                    ],
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "note",
+                                    "type": "model",
+                                    "reference": "demo_api_tasks.models.Note"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "note?.noteId == null",
+                    "children": [
+                        {
+                            "label": "true",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "404",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "'Note' record not found.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "label": "false",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "200",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Successfully processed the request.",
+                                    "to": [
+                                        "APIResponse",
+                                        "message"
+                                    ]
+                                },
+                                {
+                                    "from": [
+                                        "note"
+                                    ],
+                                    "to": [
+                                        "APIResponse",
+                                        "note"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

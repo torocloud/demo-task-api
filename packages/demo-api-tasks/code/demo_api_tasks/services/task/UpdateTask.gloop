@@ -1,0 +1,909 @@
+{
+    "input": [
+        {
+            "name": "requestBody",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "taskId",
+                    "type": "integer"
+                },
+                {
+                    "name": "subject"
+                },
+                {
+                    "name": "status"
+                },
+                {
+                    "name": "description"
+                },
+                {
+                    "name": "deadline",
+                    "type": "date",
+                    "dateFormats": [
+                        "dd/MM/yyyy"
+                    ]
+                },
+                {
+                    "name": "dependencyTask",
+                    "type": "integer"
+                },
+                {
+                    "name": "projectId",
+                    "type": "integer"
+                },
+                {
+                    "name": "assignedUserId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse"
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "task",
+                                    "type": "model",
+                                    "reference": "demo_api_tasks.models.Task"
+                                }
+                            ]
+                        }
+                    ],
+                    "lines": [
+                        {
+                            "from": [
+                                "requestBody"
+                            ],
+                            "to": [
+                                "task"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "now",
+                            "to": [
+                                "task",
+                                "modifiedDate"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "task?.projectId != null",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "true",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.project.SelectProject",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "selectProjectOutput",
+                                                    "type": "model",
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "projectId",
+                                                            "type": "integer",
+                                                            "required": true,
+                                                            "allowNull": false
+                                                        },
+                                                        {
+                                                            "name": "name",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "code",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "status",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "description",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "deadLine",
+                                                            "type": "date",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "createdDate",
+                                                            "type": "date",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "modifiedDate",
+                                                            "type": "date",
+                                                            "required": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "task",
+                                                "projectId"
+                                            ],
+                                            "to": [
+                                                "selectProjectInput",
+                                                "projectId"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectProjectOutput"
+                                            ],
+                                            "to": [
+                                                "selectProjectOutput"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "fork",
+                                    "expression": "selectProjectOutput?.projectId == null",
+                                    "children": [
+                                        {
+                                            "type": "block",
+                                            "label": "true",
+                                            "children": [
+                                                {
+                                                    "lines": [
+                                                        {
+                                                            "type": "set",
+                                                            "expression": "400",
+                                                            "to": [
+                                                                "responseCode"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "set",
+                                                            "expression": "'Project' record not found.",
+                                                            "to": [
+                                                                "APIException",
+                                                                "message"
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "break",
+                                                    "expression": "$gloopService"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "task?.assignedUserId != null",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "true",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.user.SelectUser",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "selectUserOutput",
+                                                    "type": "model",
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "userId",
+                                                            "type": "integer"
+                                                        },
+                                                        {
+                                                            "name": "firstName"
+                                                        },
+                                                        {
+                                                            "name": "lastName"
+                                                        },
+                                                        {
+                                                            "name": "email"
+                                                        },
+                                                        {
+                                                            "name": "createdDate",
+                                                            "type": "date"
+                                                        },
+                                                        {
+                                                            "name": "modifiedDate",
+                                                            "type": "date"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "task",
+                                                "assignedUserId"
+                                            ],
+                                            "to": [
+                                                "selectUserInput",
+                                                "userId"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectUserOutput"
+                                            ],
+                                            "to": [
+                                                "selectUserOutput"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "fork",
+                                    "expression": "selectUserOutput?.userId == null",
+                                    "children": [
+                                        {
+                                            "type": "block",
+                                            "label": "true",
+                                            "children": [
+                                                {
+                                                    "lines": [
+                                                        {
+                                                            "type": "set",
+                                                            "expression": "400",
+                                                            "to": [
+                                                                "responseCode"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "set",
+                                                            "expression": "'User' record not found.",
+                                                            "to": [
+                                                                "APIException",
+                                                                "message"
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "break",
+                                                    "expression": "$gloopService"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "task?.dependencyTask != null",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "true",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.task.SelectTask",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "selectTaskOutput",
+                                                    "type": "model",
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "taskId",
+                                                            "type": "integer"
+                                                        },
+                                                        {
+                                                            "name": "subject"
+                                                        },
+                                                        {
+                                                            "name": "status"
+                                                        },
+                                                        {
+                                                            "name": "description"
+                                                        },
+                                                        {
+                                                            "name": "deadline",
+                                                            "type": "date"
+                                                        },
+                                                        {
+                                                            "name": "dependencyTask",
+                                                            "type": "integer"
+                                                        },
+                                                        {
+                                                            "name": "createdDate",
+                                                            "type": "date"
+                                                        },
+                                                        {
+                                                            "name": "modifiedDate",
+                                                            "type": "date"
+                                                        },
+                                                        {
+                                                            "name": "projectId",
+                                                            "type": "integer"
+                                                        },
+                                                        {
+                                                            "name": "assignedUserId",
+                                                            "type": "integer"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "task",
+                                                "dependencyTask"
+                                            ],
+                                            "to": [
+                                                "selectTaskInput",
+                                                "taskId"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectTaskOutput"
+                                            ],
+                                            "to": [
+                                                "selectTaskOutput"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "fork",
+                                    "expression": "selectTaskOutput?.taskId == null",
+                                    "children": [
+                                        {
+                                            "type": "block",
+                                            "label": "true",
+                                            "children": [
+                                                {
+                                                    "lines": [
+                                                        {
+                                                            "type": "set",
+                                                            "expression": "400",
+                                                            "to": [
+                                                                "responseCode"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "set",
+                                                            "expression": "'Dependency Task' record not found.",
+                                                            "to": [
+                                                                "APIException",
+                                                                "message"
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "break",
+                                                    "expression": "$gloopService"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.task.SelectTask",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectTaskOutput",
+                                    "type": "model",
+                                    "reference": "demo_api_tasks.models.Task"
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "task",
+                                "taskId"
+                            ],
+                            "to": [
+                                "selectTaskInput",
+                                "taskId"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectTaskOutput"
+                            ],
+                            "to": [
+                                "selectTaskOutput"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeCode",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "searchResult",
+                                    "type": "model",
+                                    "reference": "io.toro.martini.tracker.SearchResult"
+                                }
+                            ]
+                        }
+                    ],
+                    "className": "io.toro.martini.TrackerMethods",
+                    "methodName": "searchTracker",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.util.Date",
+                        "java.util.Date",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "int",
+                        "int"
+                    ],
+                    "inputs": [
+                        {
+                            "type": "set",
+                            "expression": "[task.taskId]",
+                            "evaluate": true,
+                            "to": [
+                                "externalId"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Task",
+                            "to": [
+                                "documentTypeId"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "searchResult"
+                            ],
+                            "to": [
+                                "searchResult"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "selectTaskOutput?.taskId == null",
+                    "children": [
+                        {
+                            "label": "true",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "404",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "'Task' record not found.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.task.UpdateTask",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "updateCount",
+                                                    "type": "integer"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "task",
+                                                "taskId"
+                                            ],
+                                            "to": [
+                                                "updateTaskInput",
+                                                "taskId"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "task",
+                                                "subject"
+                                            ],
+                                            "to": [
+                                                "updateTaskInput",
+                                                "subject"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "task",
+                                                "description"
+                                            ],
+                                            "to": [
+                                                "updateTaskInput",
+                                                "description"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "task",
+                                                "deadline"
+                                            ],
+                                            "to": [
+                                                "updateTaskInput",
+                                                "deadline"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "task",
+                                                "dependencyTask"
+                                            ],
+                                            "to": [
+                                                "updateTaskInput",
+                                                "dependencyTask"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "task",
+                                                "modifiedDate"
+                                            ],
+                                            "to": [
+                                                "updateTaskInput",
+                                                "modifiedDate"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "task",
+                                                "projectId"
+                                            ],
+                                            "to": [
+                                                "updateTaskInput",
+                                                "projectId"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "task",
+                                                "assignedUserId"
+                                            ],
+                                            "to": [
+                                                "updateTaskInput",
+                                                "assignedUserId"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "final taskStatusFormat = [\n\t'Not Started' : 'Not Started',\n\t'In Progress' : 'In Progress',\n\t'Completed' : 'Completed',\n\t'Closed' : 'Closed'\n]\n\nreturn taskStatusFormat[task.status] ?: 'Not Started'",
+                                            "evaluate": true,
+                                            "to": [
+                                                "updateTaskInput",
+                                                "status"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "updateCount"
+                                            ],
+                                            "to": [
+                                                "updateCount"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "fork",
+                                    "expression": "updateCount > 0",
+                                    "children": [
+                                        {
+                                            "type": "block",
+                                            "label": "true",
+                                            "children": [
+                                                {
+                                                    "lines": [
+                                                        {
+                                                            "type": "set",
+                                                            "expression": "200",
+                                                            "to": [
+                                                                "responseCode"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "set",
+                                                            "expression": "Successfully processed the request.",
+                                                            "to": [
+                                                                "APIResponse",
+                                                                "message"
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "fork",
+                                                    "expression": "searchResult.numFound",
+                                                    "children": [
+                                                        {
+                                                            "type": "invokeCode",
+                                                            "label": "0",
+                                                            "className": "io.toro.martini.TrackerMethods",
+                                                            "methodName": "addDocument",
+                                                            "parameters": [
+                                                                "java.lang.String",
+                                                                "java.lang.String",
+                                                                "java.lang.String",
+                                                                "java.lang.String",
+                                                                "java.lang.String",
+                                                                "java.lang.String",
+                                                                "java.lang.String"
+                                                            ],
+                                                            "inputs": [
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "UUID.randomUUID()",
+                                                                    "evaluate": true,
+                                                                    "to": [
+                                                                        "internalId"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "from": [
+                                                                        "task",
+                                                                        "taskId"
+                                                                    ],
+                                                                    "to": [
+                                                                        "externalId"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "Task",
+                                                                    "to": [
+                                                                        "documentTypeId"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "Task Management API",
+                                                                    "to": [
+                                                                        "senderId"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "gloop:demo_api_tasks.services.task.UpdateTask",
+                                                                    "to": [
+                                                                        "receiverId"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "Task Updated",
+                                                                    "to": [
+                                                                        "stateName"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "task.asJson()",
+                                                                    "evaluate": true,
+                                                                    "to": [
+                                                                        "content"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "invokeCode",
+                                                            "label": "1",
+                                                            "className": "io.toro.martini.TrackerMethods",
+                                                            "methodName": "addDocumentState",
+                                                            "parameters": [
+                                                                "java.lang.String",
+                                                                "java.lang.String",
+                                                                "java.lang.String"
+                                                            ],
+                                                            "inputs": [
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "searchResult.searchResults[0].internalId",
+                                                                    "evaluate": true,
+                                                                    "to": [
+                                                                        "internalId"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "task.asJson()",
+                                                                    "evaluate": true,
+                                                                    "to": [
+                                                                        "content"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "Task Updated",
+                                                                    "to": [
+                                                                        "stateName"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "false",
+                                            "lines": [
+                                                {
+                                                    "type": "set",
+                                                    "expression": "400",
+                                                    "to": [
+                                                        "responseCode"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "Bad Request.",
+                                                    "to": [
+                                                        "APIException",
+                                                        "message"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

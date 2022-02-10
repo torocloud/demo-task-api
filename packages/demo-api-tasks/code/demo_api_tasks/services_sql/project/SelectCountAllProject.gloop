@@ -1,0 +1,33 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectCountAllProjectInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "search"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectCountAllProjectOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "C1",
+                    "type": "long",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT COUNT(*)\nFROM\n\t\"PROJECT\"\nWHERE\n\tLOWER(\"code\") LIKE LOWER(:search)"
+}

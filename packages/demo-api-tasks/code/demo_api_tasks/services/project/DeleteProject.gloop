@@ -1,0 +1,501 @@
+{
+    "input": [
+        {
+            "name": "projectId",
+            "type": "integer"
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse"
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.project.SelectProject",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectProjectOutput",
+                                    "type": "model",
+                                    "gloopProperties": [
+                                        {
+                                            "name": "projectId",
+                                            "type": "integer",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "name",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "code",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "status",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "description",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "deadLine",
+                                            "type": "date",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "createdDate",
+                                            "type": "date",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "modifiedDate",
+                                            "type": "date",
+                                            "required": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "projectId"
+                            ],
+                            "to": [
+                                "selectProjectInput",
+                                "projectId"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectProjectOutput"
+                            ],
+                            "to": [
+                                "selectProjectOutput"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeCode",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "searchResult",
+                                    "type": "model",
+                                    "reference": "io.toro.martini.tracker.SearchResult"
+                                }
+                            ]
+                        }
+                    ],
+                    "className": "io.toro.martini.TrackerMethods",
+                    "methodName": "searchTracker",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.util.Date",
+                        "java.util.Date",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "java.lang.String[]",
+                        "int",
+                        "int"
+                    ],
+                    "inputs": [
+                        {
+                            "type": "set",
+                            "expression": "[projectId]",
+                            "evaluate": true,
+                            "to": [
+                                "externalId"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Project",
+                            "to": [
+                                "documentTypeId"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "searchResult"
+                            ],
+                            "to": [
+                                "searchResult"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "selectProjectOutput?.projectId == null",
+                    "children": [
+                        {
+                            "label": "true",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "404",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "'Project' record not found.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.task.SelectCountAllTaskByProject",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "taskCount",
+                                                    "type": "long",
+                                                    "required": true
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "projectId"
+                                            ],
+                                            "to": [
+                                                "selectCountAllTaskByProjectInput",
+                                                "projectId"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectCountAllTaskByProjectOutput",
+                                                "C1"
+                                            ],
+                                            "to": [
+                                                "taskCount"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "fork",
+                                    "expression": "taskCount > 0",
+                                    "children": [
+                                        {
+                                            "label": "true",
+                                            "lines": [
+                                                {
+                                                    "type": "set",
+                                                    "expression": "400",
+                                                    "to": [
+                                                        "responseCode"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "This project cannot be deleted as there are tasks assigned to it. Please delete the associated tasks before deleting this project.",
+                                                    "to": [
+                                                        "APIException",
+                                                        "message"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "block",
+                                            "label": "false",
+                                            "children": [
+                                                {
+                                                    "type": "invokeGloop",
+                                                    "name": "demo_api_tasks.services_sql.project.DeleteProject",
+                                                    "declare": [
+                                                        {
+                                                            "variables": [
+                                                                {
+                                                                    "name": "updateCount",
+                                                                    "type": "integer"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "inputs": [
+                                                        {
+                                                            "from": [
+                                                                "projectId"
+                                                            ],
+                                                            "to": [
+                                                                "deleteProjectInput",
+                                                                "projectId"
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "outputs": [
+                                                        {
+                                                            "from": [
+                                                                "updateCount"
+                                                            ],
+                                                            "to": [
+                                                                "updateCount"
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "fork",
+                                                    "expression": "updateCount > 0",
+                                                    "children": [
+                                                        {
+                                                            "type": "block",
+                                                            "label": "true",
+                                                            "children": [
+                                                                {
+                                                                    "lines": [
+                                                                        {
+                                                                            "type": "set",
+                                                                            "expression": "200",
+                                                                            "to": [
+                                                                                "responseCode"
+                                                                            ]
+                                                                        },
+                                                                        {
+                                                                            "type": "set",
+                                                                            "expression": "Successfully processed the request.",
+                                                                            "to": [
+                                                                                "APIResponse",
+                                                                                "message"
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "fork",
+                                                                    "expression": "searchResult.numFound",
+                                                                    "children": [
+                                                                        {
+                                                                            "type": "invokeCode",
+                                                                            "label": "0",
+                                                                            "className": "io.toro.martini.TrackerMethods",
+                                                                            "methodName": "addDocument",
+                                                                            "parameters": [
+                                                                                "java.lang.String",
+                                                                                "java.lang.String",
+                                                                                "java.lang.String",
+                                                                                "java.lang.String",
+                                                                                "java.lang.String",
+                                                                                "java.lang.String"
+                                                                            ],
+                                                                            "inputs": [
+                                                                                {
+                                                                                    "type": "set",
+                                                                                    "expression": "UUID.randomUUID()",
+                                                                                    "evaluate": true,
+                                                                                    "to": [
+                                                                                        "internalId"
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "from": [
+                                                                                        "projectId"
+                                                                                    ],
+                                                                                    "to": [
+                                                                                        "externalId"
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "type": "set",
+                                                                                    "expression": "Project",
+                                                                                    "to": [
+                                                                                        "documentTypeId"
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "type": "set",
+                                                                                    "expression": "Task Management API",
+                                                                                    "to": [
+                                                                                        "senderId"
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "type": "set",
+                                                                                    "expression": "gloop:demo_api_tasks.services.project.DeleteProject",
+                                                                                    "to": [
+                                                                                        "receiverId"
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "type": "set",
+                                                                                    "expression": "Project Deleted",
+                                                                                    "to": [
+                                                                                        "stateName"
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        {
+                                                                            "type": "invokeCode",
+                                                                            "label": "1",
+                                                                            "className": "io.toro.martini.TrackerMethods",
+                                                                            "methodName": "addDocumentState",
+                                                                            "parameters": [
+                                                                                "java.lang.String",
+                                                                                "java.lang.String"
+                                                                            ],
+                                                                            "inputs": [
+                                                                                {
+                                                                                    "type": "set",
+                                                                                    "expression": "searchResult.searchResults[0].internalId",
+                                                                                    "evaluate": true,
+                                                                                    "to": [
+                                                                                        "internalId"
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "type": "set",
+                                                                                    "expression": "Project Deleted",
+                                                                                    "to": [
+                                                                                        "stateName"
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "label": "false",
+                                                            "lines": [
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "400",
+                                                                    "to": [
+                                                                        "responseCode"
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "set",
+                                                                    "expression": "Bad Request.",
+                                                                    "to": [
+                                                                        "APIException",
+                                                                        "message"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,325 @@
+{
+    "input": [
+        {
+            "name": "requestBody",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "userId",
+                    "type": "integer"
+                },
+                {
+                    "name": "firstName"
+                },
+                {
+                    "name": "lastName"
+                },
+                {
+                    "name": "email"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse"
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "user",
+                                    "type": "model",
+                                    "reference": "demo_api_tasks.models.User"
+                                }
+                            ]
+                        }
+                    ],
+                    "lines": [
+                        {
+                            "from": [
+                                "requestBody"
+                            ],
+                            "to": [
+                                "user"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "now",
+                            "to": [
+                                "user",
+                                "modifiedDate"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.user.SelectUser",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectUserOutput",
+                                    "type": "model",
+                                    "reference": "demo_api_tasks.models.User"
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "user",
+                                "userId"
+                            ],
+                            "to": [
+                                "selectUserInput",
+                                "userId"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectUserOutput"
+                            ],
+                            "to": [
+                                "selectUserOutput"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "selectUserOutput?.userId == null",
+                    "children": [
+                        {
+                            "label": "true",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "404",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "'User' record not found.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.user.UpdateUser",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "updateCount",
+                                                    "type": "integer"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "user",
+                                                "userId"
+                                            ],
+                                            "to": [
+                                                "updateUserInput",
+                                                "userId"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "user",
+                                                "firstName"
+                                            ],
+                                            "to": [
+                                                "updateUserInput",
+                                                "firstName"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "user",
+                                                "lastName"
+                                            ],
+                                            "to": [
+                                                "updateUserInput",
+                                                "lastName"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "user",
+                                                "email"
+                                            ],
+                                            "to": [
+                                                "updateUserInput",
+                                                "email"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "user",
+                                                "modifiedDate"
+                                            ],
+                                            "to": [
+                                                "updateUserInput",
+                                                "modifiedDate"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "updateCount"
+                                            ],
+                                            "to": [
+                                                "updateCount"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "fork",
+                                    "expression": "updateCount > 0",
+                                    "children": [
+                                        {
+                                            "label": "true",
+                                            "lines": [
+                                                {
+                                                    "type": "set",
+                                                    "expression": "200",
+                                                    "to": [
+                                                        "responseCode"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "Successfully processed the request.",
+                                                    "to": [
+                                                        "APIResponse",
+                                                        "message"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "label": "false",
+                                            "lines": [
+                                                {
+                                                    "type": "set",
+                                                    "expression": "400",
+                                                    "to": [
+                                                        "responseCode"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "Bad Request.",
+                                                    "to": [
+                                                        "APIException",
+                                                        "message"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

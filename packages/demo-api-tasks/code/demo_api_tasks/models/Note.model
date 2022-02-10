@@ -1,0 +1,29 @@
+{
+    "name": "Note",
+    "type": "model",
+    "gloopProperties": [
+        {
+            "name": "noteId",
+            "type": "integer"
+        },
+        {
+            "name": "description"
+        },
+        {
+            "name": "createdDate",
+            "type": "date"
+        },
+        {
+            "name": "modifiedDate",
+            "type": "date"
+        },
+        {
+            "name": "taskId",
+            "type": "integer"
+        },
+        {
+            "name": "userId",
+            "type": "integer"
+        }
+    ]
+}

@@ -1,0 +1,29 @@
+<database>
+  <name>demo_api_tasks</name>
+  <autoStart>true</autoStart>
+  <type>jdbc</type>
+  <url>jdbc:hsqldb:file:${toroesb.home}data/hsql/demo_api_tasks.db;hsqldb.tx=MVCC;sql.syntax_mys=true</url>
+  <xa>false</xa>
+  <driverClassName>org.hsqldb.jdbc.JDBCDriver</driverClassName>
+  <username>sa</username>
+  <password>encrypted:FCBCF5009D09D9D737AC99D770666187</password>
+  <acquireIncrement>1</acquireIncrement>
+  <acquisitionInterval>1</acquisitionInterval>
+  <acquisitionTimeout>30</acquisitionTimeout>
+  <allowLocalTransactions>true</allowLocalTransactions>
+  <autoCommit>true</autoCommit>
+  <applyTransactionTimeout>false</applyTransactionTimeout>
+  <automaticEnlistingEnabled>true</automaticEnlistingEnabled>
+  <deferConnectionRelease>false</deferConnectionRelease>
+  <enableJdbc4ConnectionTest>false</enableJdbc4ConnectionTest>
+  <ignoreRecoveryFailures>false</ignoreRecoveryFailures>
+  <isolationLevel>READ_COMMITTED</isolationLevel>
+  <maxIdleTime>60</maxIdleTime>
+  <minPoolSize>0</minPoolSize>
+  <maxPoolSize>20</maxPoolSize>
+  <preparedStatementCacheSize>0</preparedStatementCacheSize>
+  <shareTransactionConnections>false</shareTransactionConnections>
+  <twoPcOrderingPosition>0</twoPcOrderingPosition>
+  <useTmJoin>true</useTmJoin>
+  <loginTimeout>0</loginTimeout>
+</database>

@@ -1,0 +1,77 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectTaskInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "taskId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectTaskOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "taskId",
+                    "type": "integer",
+                    "allowNull": "false"
+                },
+                {
+                    "name": "subject",
+                    "type": "string",
+                    "allowNull": "true"
+                },
+                {
+                    "name": "status",
+                    "type": "string",
+                    "allowNull": "true"
+                },
+                {
+                    "name": "description",
+                    "type": "string",
+                    "allowNull": "true"
+                },
+                {
+                    "name": "deadline",
+                    "type": "date",
+                    "allowNull": "true"
+                },
+                {
+                    "name": "dependencyTask",
+                    "type": "integer",
+                    "allowNull": "true"
+                },
+                {
+                    "name": "createdDate",
+                    "type": "date",
+                    "allowNull": "true"
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date",
+                    "allowNull": "true"
+                },
+                {
+                    "name": "projectId",
+                    "type": "integer"
+                },
+                {
+                    "name": "assignedUserId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT *\nFROM\n\t\"TASK\"\nWHERE\n\t\"taskId\" = :taskId"
+}

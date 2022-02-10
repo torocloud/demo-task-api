@@ -1,0 +1,66 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectAllUserByProjectInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$limit",
+                    "type": "integer"
+                },
+                {
+                    "name": "$fetchSize",
+                    "type": "integer"
+                },
+                {
+                    "name": "projectId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectAllUserByProjectInputCursor",
+            "type": "model",
+            "array": true,
+            "gloopProperties": [
+                {
+                    "name": "userId",
+                    "type": "integer",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "firstName",
+                    "required": true
+                },
+                {
+                    "name": "lastName",
+                    "required": true
+                },
+                {
+                    "name": "email",
+                    "required": true
+                },
+                {
+                    "name": "createdDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_MULTI",
+    "query": "SELECT\n\t\"USER\".\"userId\",\n\t\"USER\".\"firstName\",\n\t\"USER\".\"lastName\",\n\t\"USER\".\"email\",\n\t\"USER\".\"createdDate\",\n\t\"USER\".\"modifiedDate\"\nFROM\n\t\"USER\"\nINNER JOIN\n\t\"TASK\"\nON\n\t\"TASK\".\"assignedUserId\" = \"USER\".\"userId\"\nWHERE\n\t\"TASK\".\"projectId\" = :projectId"
+}

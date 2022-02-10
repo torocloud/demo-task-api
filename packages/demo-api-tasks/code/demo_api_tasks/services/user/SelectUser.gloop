@@ -1,0 +1,186 @@
+{
+    "input": [
+        {
+            "name": "userId",
+            "type": "integer"
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "user",
+                    "type": "model",
+                    "reference": "demo_api_tasks.models.User"
+                }
+            ]
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.user.SelectUser",
+                    "inputs": [
+                        {
+                            "from": [
+                                "userId"
+                            ],
+                            "to": [
+                                "selectUserInput",
+                                "userId"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectUserOutput"
+                            ],
+                            "to": [
+                                "user"
+                            ]
+                        }
+                    ],
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "user",
+                                    "type": "model",
+                                    "reference": "demo_api_tasks.models.User"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "user?.userId == null",
+                    "children": [
+                        {
+                            "label": "true",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "404",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "'User' record not found.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "label": "false",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "200",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Successfully processed the request.",
+                                    "to": [
+                                        "APIResponse",
+                                        "message"
+                                    ]
+                                },
+                                {
+                                    "from": [
+                                        "user"
+                                    ],
+                                    "to": [
+                                        "APIResponse",
+                                        "user"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,56 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "updateTaskInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "subject"
+                },
+                {
+                    "name": "status"
+                },
+                {
+                    "name": "description"
+                },
+                {
+                    "name": "deadline",
+                    "type": "date"
+                },
+                {
+                    "name": "dependencyTask",
+                    "type": "integer"
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date"
+                },
+                {
+                    "name": "projectId",
+                    "type": "integer"
+                },
+                {
+                    "name": "assignedUserId",
+                    "type": "integer"
+                },
+                {
+                    "name": "taskId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "UPDATE",
+    "query": "UPDATE \"TASK\"\nSET\n\t\"subject\" = COALESCE( :subject, \"subject\" ),\n\t\"status\" = COALESCE( :status, \"status\" ),\n\t\"description\" = COALESCE( :description, \"description\" ),\n\t\"deadline\" = COALESCE( :deadline, \"deadline\" ),\n\t\"dependencyTask\" = COALESCE( :dependencyTask, \"dependencyTask\" ),\n\t\"modifiedDate\" = :modifiedDate,\n\t\"projectId\" = COALESCE( :projectId, \"projectId\" ),\n\t\"assignedUserId\" = COALESCE( :assignedUserId, \"assignedUserId\" )\nWHERE\n\t \"taskId\" = :taskId"
+}

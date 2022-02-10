@@ -1,0 +1,69 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectAllUserInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$limit",
+                    "type": "integer"
+                },
+                {
+                    "name": "$fetchSize",
+                    "type": "integer"
+                },
+                {
+                    "name": "search"
+                },
+                {
+                    "name": "offset",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectAllUserInputCursor",
+            "type": "model",
+            "array": true,
+            "gloopProperties": [
+                {
+                    "name": "userId",
+                    "type": "integer",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "firstName",
+                    "required": true
+                },
+                {
+                    "name": "lastName",
+                    "required": true
+                },
+                {
+                    "name": "email",
+                    "required": true
+                },
+                {
+                    "name": "createdDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_MULTI",
+    "query": "SELECT *\nFROM\n\t\"USER\"\nWHERE\n\tLOWER(\"firstName\") LIKE LOWER(:search)\nOFFSET\n\t:offset"
+}

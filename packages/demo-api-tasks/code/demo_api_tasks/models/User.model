@@ -1,0 +1,36 @@
+{
+    "name": "User",
+    "type": "model",
+    "gloopProperties": [
+        {
+            "name": "userId",
+            "type": "integer",
+            "allowNull": "false"
+        },
+        {
+            "name": "firstName",
+            "type": "string",
+            "allowNull": "true"
+        },
+        {
+            "name": "lastName",
+            "type": "string",
+            "allowNull": "true"
+        },
+        {
+            "name": "email",
+            "type": "string",
+            "allowNull": "true"
+        },
+        {
+            "name": "createdDate",
+            "type": "date",
+            "allowNull": "true"
+        },
+        {
+            "name": "modifiedDate",
+            "type": "date",
+            "allowNull": "true"
+        }
+    ]
+}

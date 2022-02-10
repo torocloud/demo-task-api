@@ -1,0 +1,40 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "updateUserInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "firstName"
+                },
+                {
+                    "name": "lastName"
+                },
+                {
+                    "name": "email"
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date"
+                },
+                {
+                    "name": "userId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "UPDATE",
+    "query": "UPDATE \"USER\"\nSET\n\t\"firstName\" = COALESCE( :firstName, \"firstName\" ),\n\t\"lastName\" = COALESCE( :lastName, \"lastName\" ),\n\t\"email\" = COALESCE( :email, \"email\" ),\n\t\"modifiedDate\" = :modifiedDate\nWHERE\n\t \"userId\" = :userId"
+}

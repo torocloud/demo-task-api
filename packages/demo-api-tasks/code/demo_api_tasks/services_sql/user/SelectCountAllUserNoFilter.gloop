@@ -1,0 +1,30 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectCountAllUserNoFilterInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectCountAllUserNoFilterOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "C1",
+                    "type": "long",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT COUNT(*)\nFROM\n\t\"USER\""
+}

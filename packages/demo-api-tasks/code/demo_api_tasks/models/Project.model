@@ -1,0 +1,37 @@
+{
+    "name": "Project",
+    "type": "model",
+    "gloopProperties": [
+        {
+            "name": "projectId",
+            "type": "integer"
+        },
+        {
+            "name": "name"
+        },
+        {
+            "name": "code"
+        },
+        {
+            "name": "status"
+        },
+        {
+            "name": "description"
+        },
+        {
+            "name": "deadLine",
+            "type": "date",
+            "dateFormats": [
+                "dd/MM/yyyy"
+            ]
+        },
+        {
+            "name": "createdDate",
+            "type": "date"
+        },
+        {
+            "name": "modifiedDate",
+            "type": "date"
+        }
+    ]
+}

@@ -1,0 +1,67 @@
+[
+    {
+        "description": "Started task",
+        "taskId": 1,
+        "userId": 1
+    },
+    {
+        "description": "I like the design with blue and purple highlights",
+        "taskId": 1,
+        "userId": 4
+    },
+    {
+        "description": "Updated mock UI with requested changes",
+        "taskId": 1,
+        "userId": 1
+    },
+    {
+        "description": "Started initial mock of API",
+        "taskId": 2,
+        "userId": 2
+    },
+    {
+        "description": "Gathered feedback from stakeholders",
+        "taskId": 2,
+        "userId": 2
+    },
+    {
+        "description": "Updated mock API with requested changes",
+        "taskId": 2,
+        "userId": 2
+    },
+    {
+        "description": "Started task",
+        "taskId": 3,
+        "userId": 1
+    },
+    {
+        "description": "Created custom components",
+        "taskId": 3,
+        "userId": 1
+    },
+    {
+        "description": "Handed over UI to QA for testing",
+        "taskId": 3,
+        "userId": 1
+    },
+    {
+        "description": "Studying mock API",
+        "taskId": 4,
+        "userId": 3
+    },
+    {
+        "description": "Implemented GET requests",
+        "taskId": 4,
+        "userId": 3
+    },
+    {
+        "description": "Implemented POST requests",
+        "taskId": 4,
+        "userId": 3
+    },
+    {
+        "description": "Discussed objectives with CMO",
+        "taskId": 6,
+        "userId": 4
+    }
+]

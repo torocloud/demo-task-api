@@ -1,0 +1,34 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectCountAllTimesheetByTaskInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "taskId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectCountAllTimesheetByTaskOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "C1",
+                    "type": "long",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT COUNT(*)\nFROM\n\t\"TIMESHEET\"\nWHERE\n\t\"taskId\" = :taskId"
+}

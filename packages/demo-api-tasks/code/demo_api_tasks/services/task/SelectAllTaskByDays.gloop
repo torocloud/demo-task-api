@@ -1,0 +1,251 @@
+{
+    "input": [
+        {
+            "name": "days",
+            "type": "integer"
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "task",
+                    "type": "model",
+                    "array": true,
+                    "reference": "demo_api_tasks.models.Task"
+                }
+            ]
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "dateToday",
+                                    "type": "date"
+                                }
+                            ]
+                        }
+                    ],
+                    "lines": [
+                        {
+                            "type": "set",
+                            "expression": "now",
+                            "to": [
+                                "dateToday"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.task.SelectAllTaskByDays",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectAllTaskByDaysInputCursor",
+                                    "type": "model",
+                                    "array": true,
+                                    "gloopProperties": [
+                                        {
+                                            "name": "taskId",
+                                            "type": "integer",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "subject",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "status",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "description",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "deadline",
+                                            "type": "date",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "dependencyTask",
+                                            "type": "integer",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "createdDate",
+                                            "type": "date",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "modifiedDate",
+                                            "type": "date",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "projectId",
+                                            "type": "integer",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "assignedUserId",
+                                            "type": "integer",
+                                            "required": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "type": "set",
+                            "expression": "dateToday + days",
+                            "evaluate": true,
+                            "to": [
+                                "selectAllTaskByDaysInput",
+                                "date"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectAllTaskByDaysInputCursor"
+                            ],
+                            "to": [
+                                "selectAllTaskByDaysInputCursor"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "iterate",
+                    "input": {
+                        "path": [
+                            "selectAllTaskByDaysInputCursor"
+                        ]
+                    },
+                    "output": {
+                        "path": [
+                            "APIResponse",
+                            "task"
+                        ]
+                    },
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "from": [
+                                        "selectAllTaskByDaysInputCursor"
+                                    ],
+                                    "to": [
+                                        "APIResponse",
+                                        "task"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "lines": [
+                        {
+                            "type": "set",
+                            "expression": "200",
+                            "to": [
+                                "responseCode"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "Successfully processed the request.",
+                            "to": [
+                                "APIResponse",
+                                "message"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

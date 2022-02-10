@@ -1,0 +1,59 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectNoteInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "noteId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectNoteOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "noteId",
+                    "type": "integer",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "description",
+                    "required": true
+                },
+                {
+                    "name": "createdDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "taskId",
+                    "type": "integer",
+                    "required": true
+                },
+                {
+                    "name": "userId",
+                    "type": "integer",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT *\nFROM\n\t\"NOTE\"\nWHERE\n\t\"noteId\" = :noteId"
+}

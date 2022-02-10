@@ -1,0 +1,264 @@
+{
+    "input": [
+        {
+            "name": "limit",
+            "type": "integer",
+            "defaultValue": 20
+        },
+        {
+            "name": "offset",
+            "type": "integer",
+            "defaultValue": 0
+        },
+        {
+            "name": "search"
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "total",
+                    "type": "integer"
+                },
+                {
+                    "name": "totalNotFiltered",
+                    "type": "integer"
+                },
+                {
+                    "name": "task",
+                    "type": "model",
+                    "array": true,
+                    "reference": "demo_api_tasks.models.Task"
+                }
+            ]
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.task.SelectAllTask",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "task",
+                                    "type": "model",
+                                    "array": true,
+                                    "reference": "demo_api_tasks.models.Task"
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "limit"
+                            ],
+                            "to": [
+                                "selectAllTaskInput",
+                                "$limit"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "offset"
+                            ],
+                            "to": [
+                                "selectAllTaskInput",
+                                "offset"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "search != null && search != \"\" ? \"%${search}%\" : \"%\"",
+                            "evaluate": true,
+                            "to": [
+                                "selectAllTaskInput",
+                                "search"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectAllTaskInputCursor"
+                            ],
+                            "to": [
+                                "task"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.task.SelectCountAllTask",
+                    "inputs": [
+                        {
+                            "type": "set",
+                            "expression": "search != null && search != \"\" ? \"%${search}%\" : \"%\"",
+                            "evaluate": true,
+                            "to": [
+                                "selectCountAllTaskInput",
+                                "search"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectCountAllTaskOutput",
+                                "C1"
+                            ],
+                            "to": [
+                                "APIResponse",
+                                "total"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.task.SelectCountAllTaskNoFilter",
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectCountAllTaskNoFilterOutput",
+                                "C1"
+                            ],
+                            "to": [
+                                "APIResponse",
+                                "totalNotFiltered"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "iterate",
+                    "input": {
+                        "path": [
+                            "task"
+                        ]
+                    },
+                    "output": {
+                        "path": [
+                            "APIResponse",
+                            "task"
+                        ]
+                    },
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "from": [
+                                        "task"
+                                    ],
+                                    "to": [
+                                        "APIResponse",
+                                        "task"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "200",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Successfully processed the request.",
+                                    "to": [
+                                        "APIResponse",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

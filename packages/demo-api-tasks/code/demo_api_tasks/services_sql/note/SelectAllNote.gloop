@@ -1,0 +1,71 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectAllNoteInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$limit",
+                    "type": "integer"
+                },
+                {
+                    "name": "$fetchSize",
+                    "type": "integer"
+                },
+                {
+                    "name": "search"
+                },
+                {
+                    "name": "offset",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectAllNoteInputCursor",
+            "type": "model",
+            "array": true,
+            "gloopProperties": [
+                {
+                    "name": "noteId",
+                    "type": "integer",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "description",
+                    "required": true
+                },
+                {
+                    "name": "createdDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "taskId",
+                    "type": "integer",
+                    "required": true
+                },
+                {
+                    "name": "userId",
+                    "type": "integer",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_MULTI",
+    "query": "SELECT *\nFROM\n\t\"NOTE\"\nWHERE\n\tLOWER(\"description\") LIKE LOWER(:search)\nOFFSET\n\t:offset"
+}

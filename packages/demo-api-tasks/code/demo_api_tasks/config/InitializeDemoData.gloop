@@ -1,0 +1,1097 @@
+{
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "fork",
+                    "expression": "'demo.data.initialized'.getPackageProperty()",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "usersInputStream",
+                                                    "type": "object",
+                                                    "objectClassName": "java.io.InputStream"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.FileMethods",
+                                    "methodName": "resourceStream",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "java.lang.String",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "type": "set",
+                                            "expression": "resources/demoData/demo-data-users.json",
+                                            "to": [
+                                                "resource"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "output"
+                                            ],
+                                            "to": [
+                                                "usersInputStream"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "usersJsonCursor",
+                                                    "type": "model",
+                                                    "array": true,
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "nodeName"
+                                                        },
+                                                        {
+                                                            "name": "cursorRecord",
+                                                            "type": "object"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.JsonMethods",
+                                    "methodName": "getInputCursorFromInputStream",
+                                    "parameters": [
+                                        "java.io.InputStream",
+                                        "java.lang.String",
+                                        "java.util.List",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "usersInputStream"
+                                            ],
+                                            "to": [
+                                                "inputStream"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "['$jsonRoot']",
+                                            "evaluate": true,
+                                            "to": [
+                                                "jsonNodeNames"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "gloopJsonCursor"
+                                            ],
+                                            "to": [
+                                                "usersJsonCursor"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "iterate",
+                                    "input": {
+                                        "path": [
+                                            "usersJsonCursor"
+                                        ]
+                                    },
+                                    "children": [
+                                        {
+                                            "declare": [
+                                                {
+                                                    "variables": [
+                                                        {
+                                                            "name": "user",
+                                                            "type": "model",
+                                                            "reference": "demo_api_tasks.models.User"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "lines": [
+                                                {
+                                                    "from": [
+                                                        "usersJsonCursor",
+                                                        "cursorRecord"
+                                                    ],
+                                                    "to": [
+                                                        "user"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "now",
+                                                    "to": [
+                                                        "user",
+                                                        "createdDate"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "invokeGloop",
+                                            "name": "demo_api_tasks.services_sql.user.InsertUser",
+                                            "inputs": [
+                                                {
+                                                    "from": [
+                                                        "user",
+                                                        "firstName"
+                                                    ],
+                                                    "to": [
+                                                        "insertUserInput",
+                                                        "firstName"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "user",
+                                                        "lastName"
+                                                    ],
+                                                    "to": [
+                                                        "insertUserInput",
+                                                        "lastName"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "user",
+                                                        "email"
+                                                    ],
+                                                    "to": [
+                                                        "insertUserInput",
+                                                        "email"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "user",
+                                                        "createdDate"
+                                                    ],
+                                                    "to": [
+                                                        "insertUserInput",
+                                                        "createdDate"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "projectsInputStream",
+                                                    "type": "object",
+                                                    "objectClassName": "java.io.InputStream"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.FileMethods",
+                                    "methodName": "resourceStream",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "java.lang.String",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "type": "set",
+                                            "expression": "resources/demoData/demo-data-projects.json",
+                                            "to": [
+                                                "resource"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "output"
+                                            ],
+                                            "to": [
+                                                "projectsInputStream"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "projectsJsonCursor",
+                                                    "type": "model",
+                                                    "array": true,
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "nodeName"
+                                                        },
+                                                        {
+                                                            "name": "cursorRecord",
+                                                            "type": "object"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.JsonMethods",
+                                    "methodName": "getInputCursorFromInputStream",
+                                    "parameters": [
+                                        "java.io.InputStream",
+                                        "java.lang.String",
+                                        "java.util.List",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "projectsInputStream"
+                                            ],
+                                            "to": [
+                                                "inputStream"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "['$jsonRoot']",
+                                            "evaluate": true,
+                                            "to": [
+                                                "jsonNodeNames"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "gloopJsonCursor"
+                                            ],
+                                            "to": [
+                                                "projectsJsonCursor"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "iterate",
+                                    "input": {
+                                        "path": [
+                                            "projectsJsonCursor"
+                                        ]
+                                    },
+                                    "children": [
+                                        {
+                                            "declare": [
+                                                {
+                                                    "variables": [
+                                                        {
+                                                            "name": "project",
+                                                            "type": "model",
+                                                            "reference": "demo_api_tasks.models.Project"
+                                                        },
+                                                        {
+                                                            "name": "projectDeadLineTemp",
+                                                            "type": "date",
+                                                            "dateFormats": [
+                                                                "MM/dd/yyyy"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "lines": [
+                                                {
+                                                    "from": [
+                                                        "projectsJsonCursor",
+                                                        "cursorRecord"
+                                                    ],
+                                                    "to": [
+                                                        "project"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "now",
+                                                    "to": [
+                                                        "project",
+                                                        "createdDate"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "projectsJsonCursor.cursorRecord?.deadLine",
+                                                    "evaluate": true,
+                                                    "to": [
+                                                        "projectDeadLineTemp"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "invokeGloop",
+                                            "name": "demo_api_tasks.services_sql.project.InsertProject",
+                                            "inputs": [
+                                                {
+                                                    "from": [
+                                                        "project",
+                                                        "name"
+                                                    ],
+                                                    "to": [
+                                                        "insertProjectInput",
+                                                        "name"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "project",
+                                                        "code"
+                                                    ],
+                                                    "to": [
+                                                        "insertProjectInput",
+                                                        "code"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "project",
+                                                        "status"
+                                                    ],
+                                                    "to": [
+                                                        "insertProjectInput",
+                                                        "status"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "project",
+                                                        "description"
+                                                    ],
+                                                    "to": [
+                                                        "insertProjectInput",
+                                                        "description"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "project",
+                                                        "createdDate"
+                                                    ],
+                                                    "to": [
+                                                        "insertProjectInput",
+                                                        "createdDate"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "projectDeadLineTemp"
+                                                    ],
+                                                    "to": [
+                                                        "insertProjectInput",
+                                                        "deadLine"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "tasksInputStream",
+                                                    "type": "object",
+                                                    "objectClassName": "java.io.InputStream"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.FileMethods",
+                                    "methodName": "resourceStream",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "java.lang.String",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "type": "set",
+                                            "expression": "resources/demoData/demo-data-tasks.json",
+                                            "to": [
+                                                "resource"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "output"
+                                            ],
+                                            "to": [
+                                                "tasksInputStream"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "tasksJsonCursor",
+                                                    "type": "model",
+                                                    "array": true,
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "nodeName"
+                                                        },
+                                                        {
+                                                            "name": "cursorRecord",
+                                                            "type": "object"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.JsonMethods",
+                                    "methodName": "getInputCursorFromInputStream",
+                                    "parameters": [
+                                        "java.io.InputStream",
+                                        "java.lang.String",
+                                        "java.util.List",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "tasksInputStream"
+                                            ],
+                                            "to": [
+                                                "inputStream"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "['$jsonRoot']",
+                                            "evaluate": true,
+                                            "to": [
+                                                "jsonNodeNames"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "gloopJsonCursor"
+                                            ],
+                                            "to": [
+                                                "tasksJsonCursor"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "iterate",
+                                    "input": {
+                                        "path": [
+                                            "tasksJsonCursor"
+                                        ]
+                                    },
+                                    "children": [
+                                        {
+                                            "declare": [
+                                                {
+                                                    "variables": [
+                                                        {
+                                                            "name": "task",
+                                                            "type": "model",
+                                                            "reference": "demo_api_tasks.models.Task"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "lines": [
+                                                {
+                                                    "from": [
+                                                        "tasksJsonCursor",
+                                                        "cursorRecord"
+                                                    ],
+                                                    "to": [
+                                                        "task"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "now",
+                                                    "to": [
+                                                        "task",
+                                                        "createdDate"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "invokeGloop",
+                                            "name": "demo_api_tasks.services_sql.task.InsertTask",
+                                            "inputs": [
+                                                {
+                                                    "from": [
+                                                        "task",
+                                                        "subject"
+                                                    ],
+                                                    "to": [
+                                                        "insertTaskInput",
+                                                        "subject"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "task",
+                                                        "status"
+                                                    ],
+                                                    "to": [
+                                                        "insertTaskInput",
+                                                        "status"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "task",
+                                                        "description"
+                                                    ],
+                                                    "to": [
+                                                        "insertTaskInput",
+                                                        "description"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "task",
+                                                        "dependencyTask"
+                                                    ],
+                                                    "to": [
+                                                        "insertTaskInput",
+                                                        "dependencyTask"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "task",
+                                                        "createdDate"
+                                                    ],
+                                                    "to": [
+                                                        "insertTaskInput",
+                                                        "createdDate"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "task",
+                                                        "projectId"
+                                                    ],
+                                                    "to": [
+                                                        "insertTaskInput",
+                                                        "projectId"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "task",
+                                                        "assignedUserId"
+                                                    ],
+                                                    "to": [
+                                                        "insertTaskInput",
+                                                        "assignedUserId"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "task",
+                                                        "deadline"
+                                                    ],
+                                                    "to": [
+                                                        "insertTaskInput",
+                                                        "deadline"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "notesInputStream",
+                                                    "type": "object",
+                                                    "objectClassName": "java.io.InputStream"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.FileMethods",
+                                    "methodName": "resourceStream",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "java.lang.String",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "type": "set",
+                                            "expression": "resources/demoData/demo-data-notes.json",
+                                            "to": [
+                                                "resource"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "output"
+                                            ],
+                                            "to": [
+                                                "notesInputStream"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "notesJsonCursor",
+                                                    "type": "model",
+                                                    "array": true,
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "nodeName"
+                                                        },
+                                                        {
+                                                            "name": "cursorRecord",
+                                                            "type": "object"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.JsonMethods",
+                                    "methodName": "getInputCursorFromInputStream",
+                                    "parameters": [
+                                        "java.io.InputStream",
+                                        "java.lang.String",
+                                        "java.util.List",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "notesInputStream"
+                                            ],
+                                            "to": [
+                                                "inputStream"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "['$jsonRoot']",
+                                            "evaluate": true,
+                                            "to": [
+                                                "jsonNodeNames"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "gloopJsonCursor"
+                                            ],
+                                            "to": [
+                                                "notesJsonCursor"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "iterate",
+                                    "input": {
+                                        "path": [
+                                            "notesJsonCursor"
+                                        ]
+                                    },
+                                    "children": [
+                                        {
+                                            "declare": [
+                                                {
+                                                    "variables": [
+                                                        {
+                                                            "name": "note",
+                                                            "type": "model",
+                                                            "reference": "demo_api_tasks.models.Note"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "lines": [
+                                                {
+                                                    "from": [
+                                                        "notesJsonCursor",
+                                                        "cursorRecord"
+                                                    ],
+                                                    "to": [
+                                                        "note"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "now",
+                                                    "to": [
+                                                        "note",
+                                                        "createdDate"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "invokeGloop",
+                                            "name": "demo_api_tasks.services_sql.note.InsertNote",
+                                            "inputs": [
+                                                {
+                                                    "from": [
+                                                        "note",
+                                                        "description"
+                                                    ],
+                                                    "to": [
+                                                        "insertNoteInput",
+                                                        "description"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "note",
+                                                        "createdDate"
+                                                    ],
+                                                    "to": [
+                                                        "insertNoteInput",
+                                                        "createdDate"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "note",
+                                                        "taskId"
+                                                    ],
+                                                    "to": [
+                                                        "insertNoteInput",
+                                                        "taskId"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "note",
+                                                        "userId"
+                                                    ],
+                                                    "to": [
+                                                        "insertNoteInput",
+                                                        "userId"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "timesheetsInputStream",
+                                                    "type": "object",
+                                                    "objectClassName": "java.io.InputStream"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.FileMethods",
+                                    "methodName": "resourceStream",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "java.lang.String",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "type": "set",
+                                            "expression": "resources/demoData/demo-data-timesheets.json",
+                                            "to": [
+                                                "resource"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "output"
+                                            ],
+                                            "to": [
+                                                "timesheetsInputStream"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "timesheetsJsonCursor",
+                                                    "type": "model",
+                                                    "array": true,
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "nodeName"
+                                                        },
+                                                        {
+                                                            "name": "cursorRecord",
+                                                            "type": "object"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "className": "io.toro.martini.JsonMethods",
+                                    "methodName": "getInputCursorFromInputStream",
+                                    "parameters": [
+                                        "java.io.InputStream",
+                                        "java.lang.String",
+                                        "java.util.List",
+                                        "io.toro.gloop.engine.GloopExecutionContext"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "timesheetsInputStream"
+                                            ],
+                                            "to": [
+                                                "inputStream"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "['$jsonRoot']",
+                                            "evaluate": true,
+                                            "to": [
+                                                "jsonNodeNames"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "gloopJsonCursor"
+                                            ],
+                                            "to": [
+                                                "timesheetsJsonCursor"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "iterate",
+                                    "input": {
+                                        "path": [
+                                            "timesheetsJsonCursor"
+                                        ]
+                                    },
+                                    "children": [
+                                        {
+                                            "declare": [
+                                                {
+                                                    "variables": [
+                                                        {
+                                                            "name": "timesheet",
+                                                            "type": "model",
+                                                            "reference": "demo_api_tasks.models.Timesheet"
+                                                        }
+                                                    ]
+                                                }
+                                            ],
+                                            "lines": [
+                                                {
+                                                    "from": [
+                                                        "timesheetsJsonCursor",
+                                                        "cursorRecord"
+                                                    ],
+                                                    "to": [
+                                                        "timesheet"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "set",
+                                                    "expression": "now",
+                                                    "to": [
+                                                        "timesheet",
+                                                        "createDate"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "invokeGloop",
+                                            "name": "demo_api_tasks.services_sql.timesheet.InsertTimesheet",
+                                            "inputs": [
+                                                {
+                                                    "from": [
+                                                        "timesheet",
+                                                        "description"
+                                                    ],
+                                                    "to": [
+                                                        "insertTimesheetInput",
+                                                        "description"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "timesheet",
+                                                        "timeLogged"
+                                                    ],
+                                                    "to": [
+                                                        "insertTimesheetInput",
+                                                        "timeLogged"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "timesheet",
+                                                        "createDate"
+                                                    ],
+                                                    "to": [
+                                                        "insertTimesheetInput",
+                                                        "createDate"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "timesheet",
+                                                        "taskId"
+                                                    ],
+                                                    "to": [
+                                                        "insertTimesheetInput",
+                                                        "taskId"
+                                                    ]
+                                                },
+                                                {
+                                                    "from": [
+                                                        "timesheet",
+                                                        "userId"
+                                                    ],
+                                                    "to": [
+                                                        "insertTimesheetInput",
+                                                        "userId"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.GroovyMethods",
+                                    "methodName": "savePackageProperty",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "java.lang.String"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "type": "set",
+                                            "expression": "demo.data.initialized",
+                                            "to": [
+                                                "key"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "true",
+                                            "to": [
+                                                "value"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

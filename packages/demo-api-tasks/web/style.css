@@ -1,0 +1,206 @@
+.demo {
+    background: #f3f6fd;
+    font-weight: 400;
+}
+
+.demo-content {
+    overflow: hidden;
+    margin-left: 290px;
+    padding: 30px 15px 0px 15px;
+    min-height: 100vh;
+    transition: all 0.3s ease-in-out;
+}
+
+.demo-sidebar {
+    background: #ffffff;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    transition: all 0.6s ease-in-out;
+    width: 260px;
+    z-index: 1000;
+}
+
+.demo-sidebar-toggle {
+    width: 260px !important;
+    left: 0 !important;
+    z-index: 999 !important;
+}
+
+.demo-sidebar-close {
+    display: none;
+}
+
+.demo-sidebar-close:hover {
+    cursor: pointer;
+}
+
+.demo-sidebar-logo {
+    border-bottom: 1px solid #dcdddf;
+    margin: 0 20px 20px;
+    padding: 20px 0 10px;
+    position: relative;
+    transition: all 0.6s ease-in-out;
+    width: auto;
+}
+
+.demo-sidebar-menu {
+    margin: 0 20px;
+    position: relative;
+}
+
+.demo-sidebar-menu .demo-menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.demo-sidebar-menu .demo-menu li {
+    list-style-type: none;
+    position: relative;
+    white-space: nowrap;
+}
+
+.demo-sidebar-menu .demo-menu li a {
+    align-items: center;
+    border-radius: 10px;
+    color: #848486;
+    display: flex;
+    font-size: 16px;
+    opacity: 1;
+    overflow: hidden;
+    padding: 15px 18px;
+    position: relative;
+    text-transform: capitalize;
+    white-space: nowrap;
+}
+
+.demo-sidebar-menu .demo-menu li a:hover {
+    cursor: pointer;
+}
+
+.demo-sidebar-menu .demo-menu li a i {
+    display: inline-block;
+    font-size: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+    width: 20px;
+}
+
+.demo-top-bar {
+    background: #ffffff;
+    display: inline-block;
+    left: auto;
+    line-height: 73px;
+    margin: 0px;
+    min-height: 73px;
+    padding: 0 30px 0 30px;
+    position: fixed;
+    right: 0;
+    top: 0;
+    transition: all 0.3s ease-in-out;
+    z-index: 99;
+}
+
+.topnav-left {
+    flex: 1;
+}
+
+.card-block {
+    display: flex;
+    -webkit-box-flex: 1;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+}
+
+.card {
+    border: none;
+    position: relative;
+}
+
+.card .card-body {
+    padding: 20px;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+}
+
+.write-card {
+    padding-left: 30px !important;
+    padding-right: 30px !important;
+}
+
+tbody > tr:hover{
+    cursor: pointer;
+}
+
+.demo-highlight {
+    color: #ffffff !important;
+	background-color: #007bff !important;
+}
+
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"]:after {
+    content: "\25BC"; 
+    color: #555;
+    padding: 0 5px;
+}
+
+input[type="date"]:hover:after {
+    color: #007bff;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    height: auto;
+    color: transparent;
+    background: transparent;
+}
+
+input[type="date"]::-webkit-inner-spin-button {
+    z-index: 1;
+}
+
+ input[type="date"]::-webkit-clear-button {
+     z-index: 1;
+ }
+
+@media (max-width: 1299px) {
+    .demo-sidebar {
+        display: inline-block;
+        left: -300px;
+        margin: 0px;
+        top: 0px;
+        z-index: 99;
+    }
+
+    .demo-top-bar {
+        width: 100%;
+    }
+
+    .demo-content {
+        margin-left: 0;
+        padding: 90px 15px 0;
+    }
+
+    .demo-sidebar-close {
+        display: block;
+    }
+}
+
+@media (min-width: 1299px) {
+    .demo-top-bar {
+        display: none;
+    }
+}

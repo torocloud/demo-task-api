@@ -1,0 +1,78 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectAllProjectInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$limit",
+                    "type": "integer"
+                },
+                {
+                    "name": "$fetchSize",
+                    "type": "integer"
+                },
+                {
+                    "name": "search"
+                },
+                {
+                    "name": "offset",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectAllProjectInputCursor",
+            "type": "model",
+            "array": true,
+            "gloopProperties": [
+                {
+                    "name": "projectId",
+                    "type": "integer",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "name",
+                    "required": true
+                },
+                {
+                    "name": "code",
+                    "required": true
+                },
+                {
+                    "name": "status",
+                    "required": true
+                },
+                {
+                    "name": "description",
+                    "required": true
+                },
+                {
+                    "name": "deadLine",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "createdDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_MULTI",
+    "query": "SELECT *\nFROM\n\t\"PROJECT\"\nWHERE\n\tLOWER(\"code\") LIKE LOWER(:search)\nOFFSET\n\t:offset"
+}

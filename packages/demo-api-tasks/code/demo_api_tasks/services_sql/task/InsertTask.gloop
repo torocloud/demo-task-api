@@ -1,0 +1,62 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "insertTaskInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$getGeneratedKeys",
+                    "type": "boolean",
+                    "defaultValue": false
+                },
+                {
+                    "name": "subject"
+                },
+                {
+                    "name": "status"
+                },
+                {
+                    "name": "description"
+                },
+                {
+                    "name": "deadline",
+                    "type": "date"
+                },
+                {
+                    "name": "dependencyTask",
+                    "type": "integer"
+                },
+                {
+                    "name": "createdDate",
+                    "type": "date"
+                },
+                {
+                    "name": "projectId",
+                    "type": "integer"
+                },
+                {
+                    "name": "assignedUserId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        },
+        {
+            "name": "generatedKeys",
+            "type": "model",
+            "allowExtraProperties": true
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "INSERT",
+    "query": "INSERT INTO \"TASK\" (\n\t\"subject\",\n\t\"status\",\n\t\"description\",\n\t\"deadline\",\n\t\"dependencyTask\",\n\t\"createdDate\",\n\t\"projectId\",\n\t\"assignedUserId\"\n) VALUES (\n\t:subject,\n\t:status,\n\t:description,\n\t:deadline,\n\t:dependencyTask,\n\t:createdDate,\n\t:projectId,\n\t:assignedUserId\n)"
+}

@@ -1,0 +1,46 @@
+{
+    "name": "Task",
+    "type": "model",
+    "gloopProperties": [
+        {
+            "name": "taskId",
+            "type": "integer"
+        },
+        {
+            "name": "subject"
+        },
+        {
+            "name": "status"
+        },
+        {
+            "name": "description"
+        },
+        {
+            "name": "deadline",
+            "type": "date",
+            "dateFormats": [
+                "dd/MM/yyyy"
+            ]
+        },
+        {
+            "name": "dependencyTask",
+            "type": "integer"
+        },
+        {
+            "name": "createdDate",
+            "type": "date"
+        },
+        {
+            "name": "modifiedDate",
+            "type": "date"
+        },
+        {
+            "name": "projectId",
+            "type": "integer"
+        },
+        {
+            "name": "assignedUserId",
+            "type": "integer"
+        }
+    ]
+}

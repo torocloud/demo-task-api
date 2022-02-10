@@ -1,0 +1,33 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectCountAllUserInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "search"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectCountAllUserOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "C1",
+                    "type": "long",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT COUNT(*)\nFROM\n\t\"USER\"\nWHERE\n\tLOWER(\"firstName\") LIKE LOWER(:search)"
+}

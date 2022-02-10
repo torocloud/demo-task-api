@@ -1,0 +1,396 @@
+{
+    "input": [
+        {
+            "name": "projectCode"
+        },
+        {
+            "name": "limit",
+            "type": "integer",
+            "defaultValue": 20
+        },
+        {
+            "name": "offset",
+            "type": "integer",
+            "defaultValue": 0
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "total",
+                    "type": "integer"
+                },
+                {
+                    "name": "task",
+                    "type": "model",
+                    "array": true,
+                    "reference": "demo_api_tasks.models.Task"
+                }
+            ]
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.project.SelectProjectByCode",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectProjectByCodeOutput",
+                                    "type": "model",
+                                    "gloopProperties": [
+                                        {
+                                            "name": "projectId",
+                                            "type": "integer",
+                                            "required": true,
+                                            "allowNull": false
+                                        },
+                                        {
+                                            "name": "name",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "code",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "status",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "description",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "deadLine",
+                                            "type": "date",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "createdDate",
+                                            "type": "date",
+                                            "required": true
+                                        },
+                                        {
+                                            "name": "modifiedDate",
+                                            "type": "date",
+                                            "required": true
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "projectCode"
+                            ],
+                            "to": [
+                                "selectProjectByCodeInput",
+                                "code"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectProjectByCodeOutput"
+                            ],
+                            "to": [
+                                "selectProjectByCodeOutput"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "selectProjectByCodeOutput?.projectId == null",
+                    "children": [
+                        {
+                            "label": "true",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "400",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "'Project' record not found.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.task.SelectAllTaskByProject",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "selectAllTaskByProjectInputCursor",
+                                                    "type": "model",
+                                                    "array": true,
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "taskId",
+                                                            "type": "integer",
+                                                            "required": true,
+                                                            "allowNull": false
+                                                        },
+                                                        {
+                                                            "name": "subject",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "status",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "description",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "deadline",
+                                                            "type": "date",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "dependencyTask",
+                                                            "type": "integer",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "createdDate",
+                                                            "type": "date",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "modifiedDate",
+                                                            "type": "date",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "projectId",
+                                                            "type": "integer",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "assignedUserId",
+                                                            "type": "integer",
+                                                            "required": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "selectProjectByCodeOutput",
+                                                "projectId"
+                                            ],
+                                            "to": [
+                                                "selectAllTaskByProjectInput",
+                                                "projectId"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "limit"
+                                            ],
+                                            "to": [
+                                                "selectAllTaskByProjectInput",
+                                                "$limit"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "offset"
+                                            ],
+                                            "to": [
+                                                "selectAllTaskByProjectInput",
+                                                "offset"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectAllTaskByProjectInputCursor"
+                                            ],
+                                            "to": [
+                                                "selectAllTaskByProjectInputCursor"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.task.SelectCountAllTaskByProject",
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "selectProjectByCodeOutput",
+                                                "projectId"
+                                            ],
+                                            "to": [
+                                                "selectCountAllTaskByProjectInput",
+                                                "projectId"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectCountAllTaskByProjectOutput",
+                                                "C1"
+                                            ],
+                                            "to": [
+                                                "APIResponse",
+                                                "total"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "iterate",
+                                    "input": {
+                                        "path": [
+                                            "selectAllTaskByProjectInputCursor"
+                                        ]
+                                    },
+                                    "output": {
+                                        "path": [
+                                            "APIResponse",
+                                            "task"
+                                        ]
+                                    },
+                                    "children": [
+                                        {
+                                            "lines": [
+                                                {
+                                                    "from": [
+                                                        "selectAllTaskByProjectInputCursor"
+                                                    ],
+                                                    "to": [
+                                                        "APIResponse",
+                                                        "task"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "200",
+                                            "to": [
+                                                "responseCode"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "Successfully processed the request.",
+                                            "to": [
+                                                "APIResponse",
+                                                "message"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

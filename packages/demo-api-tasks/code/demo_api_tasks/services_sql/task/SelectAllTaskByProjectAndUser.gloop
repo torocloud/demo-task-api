@@ -1,0 +1,94 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectAllTaskByProjectAndUserInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$limit",
+                    "type": "integer"
+                },
+                {
+                    "name": "$fetchSize",
+                    "type": "integer"
+                },
+                {
+                    "name": "projectId",
+                    "type": "integer"
+                },
+                {
+                    "name": "assignedUserId",
+                    "type": "integer"
+                },
+                {
+                    "name": "offset",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectAllTaskByProjectAndUserInputCursor",
+            "type": "model",
+            "array": true,
+            "gloopProperties": [
+                {
+                    "name": "taskId",
+                    "type": "integer",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "subject",
+                    "required": true
+                },
+                {
+                    "name": "status",
+                    "required": true
+                },
+                {
+                    "name": "description",
+                    "required": true
+                },
+                {
+                    "name": "deadline",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "dependencyTask",
+                    "type": "integer",
+                    "required": true
+                },
+                {
+                    "name": "createdDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "projectId",
+                    "type": "integer",
+                    "required": true
+                },
+                {
+                    "name": "assignedUserId",
+                    "type": "integer",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_MULTI",
+    "query": "SELECT *\nFROM\n\t\"TASK\"\nWHERE\n\t\"projectId\" = :projectId AND\n\t\"assignedUserId\" = :assignedUserId\nOFFSET\n\t:offset"
+}

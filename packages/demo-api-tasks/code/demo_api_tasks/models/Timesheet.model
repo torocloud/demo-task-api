@@ -1,0 +1,33 @@
+{
+    "name": "Timesheet",
+    "type": "model",
+    "gloopProperties": [
+        {
+            "name": "timesheetId",
+            "type": "integer"
+        },
+        {
+            "name": "description"
+        },
+        {
+            "name": "timeLogged",
+            "type": "integer"
+        },
+        {
+            "name": "createDate",
+            "type": "date"
+        },
+        {
+            "name": "modifiedDate",
+            "type": "date"
+        },
+        {
+            "name": "taskId",
+            "type": "integer"
+        },
+        {
+            "name": "userId",
+            "type": "integer"
+        }
+    ]
+}

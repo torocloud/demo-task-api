@@ -1,0 +1,1430 @@
+{
+    "info": {
+        "title": "demo_api_tasks API",
+        "license": {
+            "name": "W3C"
+        },
+        "version": "1.0.0"
+    },
+    "basePath": "/demo_api_tasks/1.0",
+    "paths": {
+        "/note": {
+            "get": {
+                "tags": [
+                    "Note"
+                ],
+                "summary": "Get all 'Note' records",
+                "description": "This operation will get all'Note' records",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "search",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.note.SelectAllNote",
+                "responseCodeField": "responseCode"
+            },
+            "put": {
+                "tags": [
+                    "Note"
+                ],
+                "summary": "Update the 'Note' record",
+                "description": "this operation will update the 'Note' entity.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Note' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.note.UpdateNote",
+                "responseCodeField": "responseCode"
+            },
+            "post": {
+                "tags": [
+                    "Note"
+                ],
+                "summary": "Add 'Note' record",
+                "description": "This operation will add a new 'Note' record.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.note.InsertNote",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/note/{noteId}": {
+            "get": {
+                "tags": [
+                    "Note"
+                ],
+                "summary": "Get a single 'Note' record",
+                "description": "This operation will get a single 'Note' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "noteId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Note' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.note.SelectNote",
+                "responseCodeField": "responseCode"
+            },
+            "delete": {
+                "tags": [
+                    "Note"
+                ],
+                "summary": "Delete Note",
+                "description": "This operation will delete the 'Note' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "noteId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Note' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.note.DeleteNote",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/project": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get all 'Project' records",
+                "description": "This operation will get all'Project' records",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "search",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.project.SelectAllProject",
+                "responseCodeField": "responseCode"
+            },
+            "put": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Update the 'Project' record",
+                "description": "this operation will update the 'Project' entity.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Project' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.project.UpdateProject",
+                "responseCodeField": "responseCode"
+            },
+            "post": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Add 'Project' record",
+                "description": "This operation will add a new 'Project' record.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.project.InsertProject",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/project/{projectId}": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get a single 'Project' record",
+                "description": "This operation will get a single 'Project' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Project' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.project.SelectProject",
+                "responseCodeField": "responseCode"
+            },
+            "delete": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Delete Project",
+                "description": "This operation will delete the 'Project' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Project' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.project.DeleteProject",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/project/{projectId}/timesheet": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "summary": "Get all 'Timesheet' records by 'Project'",
+                "description": "This operation will get all 'Timesheet' records by 'Project'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Project' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.project.SelectProjectTimesheets",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/task": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get all 'Task' records",
+                "description": "This operation will get all'Task' records",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "search",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.SelectAllTask",
+                "responseCodeField": "responseCode"
+            },
+            "put": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Update the 'Task' record",
+                "description": "this operation will update the 'Task' entity.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Task' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.UpdateTask",
+                "responseCodeField": "responseCode"
+            },
+            "post": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Add 'Task' record",
+                "description": "This operation will add a new 'Task' record.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.InsertTask",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/task/{taskId}": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get a single 'Task' record",
+                "description": "This operation will get a single 'Task' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Task' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.SelectTask",
+                "responseCodeField": "responseCode"
+            },
+            "delete": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Delete Task",
+                "description": "This operation will delete the 'Task' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Task' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.DeleteTask",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/task/project/{projectCode}": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get all 'Task' records by 'Project'",
+                "description": "This operation will get all 'Task' records by 'Project'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "projectCode",
+                        "type": "PATH"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Project' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.SelectAllTaskByProject",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/task/project/{projectCode}/status/{status}": {
+            "get": {
+                "summary": "Get all 'Task' records by 'Project' & 'Status",
+                "description": "This operation will get all 'Task' records by 'Project' & Status",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "projectCode",
+                        "type": "PATH"
+                    },
+                    {
+                        "name": "status",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Task' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.SelectAllTaskByProjectAndStatus",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/task/project/{projectCode}/user/{assignedUserId}": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get all 'Task' records by 'Project' & 'User'",
+                "description": "This operation will get all 'Task' records by 'Project' & 'User'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "projectCode",
+                        "type": "PATH"
+                    },
+                    {
+                        "name": "assignedUserId",
+                        "type": "PATH"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Task' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.SelectAllTaskByProjectAndUser",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/task/user/{assignedUserId}": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get all 'Task' records by 'User'",
+                "description": "This operation will get all 'Task' records by 'User'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "assignedUserId",
+                        "type": "PATH"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Task' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.SelectAllTaskByUser",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/task/{taskId}/timesheet": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get all 'Timesheet' records by 'Task'",
+                "description": "This operation will get all 'Timesheet' records by 'Task'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "type": "PATH"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Task' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.SelectTaskTimesheets",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/task/{taskId}/notes": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get all 'Note' records by 'Task'",
+                "description": "This operation will get all 'Note' records by 'Task'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "taskId",
+                        "type": "PATH"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Task' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.SelectTaskNotes",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/task/day/{days}": {
+            "get": {
+                "tags": [
+                    "Task"
+                ],
+                "summary": "Get all 'Task' records by days within deadline",
+                "description": "This operation will get all 'Task' records by days within deadline",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "days",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.task.SelectAllTaskByDays",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/timesheet": {
+            "get": {
+                "tags": [
+                    "Timesheet"
+                ],
+                "summary": "Get all 'Timesheet' records",
+                "description": "This operation will get all'Timesheet' records",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "search",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.timesheet.SelectAllTimesheet",
+                "responseCodeField": "responseCode"
+            },
+            "put": {
+                "tags": [
+                    "Timesheet"
+                ],
+                "summary": "Update the 'Timesheet' record",
+                "description": "this operation will update the 'Timesheet' entity.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Timesheet' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.timesheet.UpdateTimesheet",
+                "responseCodeField": "responseCode"
+            },
+            "post": {
+                "tags": [
+                    "Timesheet"
+                ],
+                "summary": "Add 'Timesheet' record",
+                "description": "This operation will add a new 'Timesheet' record.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.timesheet.InsertTimesheet",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/timesheet/{timesheetId}": {
+            "get": {
+                "tags": [
+                    "Timesheet"
+                ],
+                "summary": "Get a single 'Timesheet' record",
+                "description": "This operation will get a single 'Timesheet' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "timesheetId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Timesheet' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.timesheet.SelectTimesheet",
+                "responseCodeField": "responseCode"
+            },
+            "delete": {
+                "tags": [
+                    "Timesheet"
+                ],
+                "summary": "Delete Timesheet",
+                "description": "This operation will delete the 'Timesheet' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "timesheetId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Timesheet' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.timesheet.DeleteTimesheet",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/timesheet/user/{userId}": {
+            "get": {
+                "tags": [
+                    "Timesheet"
+                ],
+                "summary": "Get all 'Timesheet' records by 'User'",
+                "description": "This operation will get all 'Timesheet' records by 'User'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Task' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.timesheet.SelectAllTimesheetByUser",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get all 'User' records",
+                "description": "This operation will get all'User' records",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "offset",
+                        "type": "QUERY"
+                    },
+                    {
+                        "name": "search",
+                        "type": "QUERY"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.user.SelectAllUser",
+                "responseCodeField": "responseCode"
+            },
+            "put": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update the 'User' record",
+                "description": "this operation will update the 'User' entity.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'User' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.user.UpdateUser",
+                "responseCodeField": "responseCode"
+            },
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Add 'User' record",
+                "description": "This operation will add a new 'User' record.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "bodyParameter": {
+                    "name": "requestBody"
+                },
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.user.InsertUser",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/user/{userId}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get a single 'User' record",
+                "description": "This operation will get a single 'User' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'User' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.user.SelectUser",
+                "responseCodeField": "responseCode"
+            },
+            "delete": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete User",
+                "description": "This operation will delete the 'User' record",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'User' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.user.DeleteUser",
+                "responseCodeField": "responseCode"
+            }
+        },
+        "/user/project/{projectCode}": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get all 'User' records by 'Project'",
+                "description": "This operation will get all 'User' records by 'Project'",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "projectCode",
+                        "type": "PATH"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "body": "APIResponse",
+                        "description": "Successfully processed the request."
+                    },
+                    "400": {
+                        "body": "APIException",
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "body": "APIException",
+                        "description": "'Project' record not found."
+                    },
+                    "500": {
+                        "body": "APIException",
+                        "description": "Oh no! An unexpected error occurred."
+                    }
+                },
+                "operationType": "gloop",
+                "operationLocation": "demo_api_tasks.services.user.SelectAllUserByProject",
+                "responseCodeField": "responseCode"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Note",
+            "description": "Note description.",
+            "externalDocumentation": {
+                "url": "http://example.com",
+                "description": "External documentation description."
+            }
+        },
+        {
+            "name": "Project",
+            "description": "Project description.",
+            "externalDocumentation": {
+                "url": "http://example.com",
+                "description": "External documentation description."
+            }
+        },
+        {
+            "name": "Task",
+            "description": "Task description.",
+            "externalDocumentation": {
+                "url": "http://example.com",
+                "description": "External documentation description."
+            }
+        },
+        {
+            "name": "Timesheet",
+            "description": "Timesheet description.",
+            "externalDocumentation": {
+                "url": "http://example.com",
+                "description": "External documentation description."
+            }
+        },
+        {
+            "name": "User",
+            "description": "User description.",
+            "externalDocumentation": {
+                "url": "http://example.com",
+                "description": "External documentation description."
+            }
+        }
+    ]
+}

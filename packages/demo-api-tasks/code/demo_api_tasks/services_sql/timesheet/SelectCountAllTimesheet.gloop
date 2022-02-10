@@ -1,0 +1,33 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectCountAllTimesheetInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "search"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectCountAllTimesheetOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "C1",
+                    "type": "long",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT COUNT(*)\nFROM\n\t\"TIMESHEET\"\nWHERE\n\tLOWER(\"description\") LIKE LOWER(:search)"
+}

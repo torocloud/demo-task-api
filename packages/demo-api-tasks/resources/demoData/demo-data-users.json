@@ -1,0 +1,27 @@
+[
+  {
+    "firstName": "Frank",
+    "lastName": "Ford",
+    "email": "frankford@mailinator.com"
+  },
+  {
+    "firstName": "Susan",
+    "lastName": "Sacco",
+    "email": "susansacco@mailinator.com"
+  },
+  {
+    "firstName": "Mary",
+    "lastName": "Witherell",
+    "email": "marywitherell@mailinator.com"
+  },
+  {
+    "firstName": "John",
+    "lastName": "Harris",
+    "email": "johnharris@mailinator.com"
+  },
+  {
+    "firstName": "Darnell",
+    "lastName": "Phillips",
+    "email": "darnellphillips@mailinator.com"
+  }
+]

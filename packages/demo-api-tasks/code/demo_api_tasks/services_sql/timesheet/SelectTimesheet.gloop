@@ -1,0 +1,64 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "selectTimesheetInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "timesheetId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "selectTimesheetOutput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "timesheetId",
+                    "type": "integer",
+                    "required": true,
+                    "allowNull": false
+                },
+                {
+                    "name": "description",
+                    "required": true
+                },
+                {
+                    "name": "timeLogged",
+                    "type": "integer",
+                    "required": true
+                },
+                {
+                    "name": "createDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "modifiedDate",
+                    "type": "date",
+                    "required": true
+                },
+                {
+                    "name": "taskId",
+                    "type": "integer",
+                    "required": true
+                },
+                {
+                    "name": "userId",
+                    "type": "integer",
+                    "required": true
+                }
+            ]
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "SELECT_SINGLE",
+    "query": "SELECT *\nFROM\n\t\"TIMESHEET\"\nWHERE\n\t\"timesheetId\" = :timesheetId"
+}

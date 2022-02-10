@@ -1,0 +1,307 @@
+{
+    "input": [
+        {
+            "name": "userId",
+            "type": "integer"
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "timesheet",
+                    "type": "model",
+                    "array": true,
+                    "reference": "demo_api_tasks.models.Timesheet"
+                }
+            ]
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.user.SelectUser",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectUserOutput",
+                                    "type": "model",
+                                    "gloopProperties": [
+                                        {
+                                            "name": "userId",
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "name": "firstName"
+                                        },
+                                        {
+                                            "name": "lastName"
+                                        },
+                                        {
+                                            "name": "email"
+                                        },
+                                        {
+                                            "name": "createdDate",
+                                            "type": "date"
+                                        },
+                                        {
+                                            "name": "modifiedDate",
+                                            "type": "date"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "userId"
+                            ],
+                            "to": [
+                                "selectUserInput",
+                                "userId"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectUserOutput"
+                            ],
+                            "to": [
+                                "selectUserOutput"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "selectUserOutput?.userId == null",
+                    "children": [
+                        {
+                            "label": "true",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "404",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "'User' record not found.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.timesheet.SelectAllTimesheetByUser",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "selectAllTimesheetByUserInputCursor",
+                                                    "type": "model",
+                                                    "array": true,
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "timesheetId",
+                                                            "type": "integer",
+                                                            "required": true,
+                                                            "allowNull": false
+                                                        },
+                                                        {
+                                                            "name": "description",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "timeLogged",
+                                                            "type": "integer",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "createDate",
+                                                            "type": "date",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "modifiedDate",
+                                                            "type": "date",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "taskId",
+                                                            "type": "integer",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "userId",
+                                                            "type": "integer",
+                                                            "required": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "userId"
+                                            ],
+                                            "to": [
+                                                "selectAllTimesheetByUserInput",
+                                                "userId"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectAllTimesheetByUserInputCursor"
+                                            ],
+                                            "to": [
+                                                "selectAllTimesheetByUserInputCursor"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "iterate",
+                                    "input": {
+                                        "path": [
+                                            "selectAllTimesheetByUserInputCursor"
+                                        ]
+                                    },
+                                    "output": {
+                                        "path": [
+                                            "APIResponse",
+                                            "timesheet"
+                                        ]
+                                    },
+                                    "children": [
+                                        {
+                                            "lines": [
+                                                {
+                                                    "from": [
+                                                        "selectAllTimesheetByUserInputCursor"
+                                                    ],
+                                                    "to": [
+                                                        "APIResponse",
+                                                        "timesheet"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "200",
+                                            "to": [
+                                                "responseCode"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "Successfully processed the request.",
+                                            "to": [
+                                                "APIResponse",
+                                                "message"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

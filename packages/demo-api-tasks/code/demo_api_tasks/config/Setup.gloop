@@ -1,0 +1,580 @@
+{
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "fork",
+                    "expression": "'database.type'.getPackageProperty().equalsIgnoreCase('oracle')",
+                    "children": [
+                        {
+                            "type": "invokeCode",
+                            "label": "true",
+                            "className": "io.toro.martini.GloopMethods",
+                            "methodName": "setSystemProperty",
+                            "parameters": [
+                                "java.lang.String",
+                                "java.lang.String"
+                            ],
+                            "inputs": [
+                                {
+                                    "type": "set",
+                                    "expression": "oracle.jdbc.J2EE13Compliant",
+                                    "to": [
+                                        "name"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "true",
+                                    "to": [
+                                        "value"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "database"
+                                },
+                                {
+                                    "name": "dateType"
+                                },
+                                {
+                                    "name": "JDBCConnectionPoolInfo",
+                                    "type": "model",
+                                    "reference": "io.toro.martini.jdbc.JDBCConnectionPoolInfo"
+                                }
+                            ]
+                        }
+                    ],
+                    "lines": [
+                        {
+                            "type": "set",
+                            "expression": "'database.type'.getPackageProperty( 'hsql' ).equalsIgnoreCase( 'mssql' ) ? 'DATETIME' : 'TIMESTAMP'",
+                            "evaluate": true,
+                            "to": [
+                                "dateType"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "'database.type'.getPackageProperty( 'hsql' )",
+                            "evaluate": true,
+                            "to": [
+                                "database"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "'database.name'.getPackageProperty()",
+                            "evaluate": true,
+                            "to": [
+                                "JDBCConnectionPoolInfo",
+                                "name"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "true",
+                            "to": [
+                                "JDBCConnectionPoolInfo",
+                                "enabled"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "false",
+                            "to": [
+                                "JDBCConnectionPoolInfo",
+                                "xa"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "\"${database}.driver\".getPackageProperty()",
+                            "evaluate": true,
+                            "to": [
+                                "JDBCConnectionPoolInfo",
+                                "driverClass"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "\"${database}.connection.url\".getPackageProperty()",
+                            "evaluate": true,
+                            "to": [
+                                "JDBCConnectionPoolInfo",
+                                "url"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "\"${database}.username\".getPackageProperty()",
+                            "evaluate": true,
+                            "to": [
+                                "JDBCConnectionPoolInfo",
+                                "username"
+                            ]
+                        },
+                        {
+                            "type": "set",
+                            "expression": "\"${database}.password\".getPackageProperty()",
+                            "evaluate": true,
+                            "to": [
+                                "JDBCConnectionPoolInfo",
+                                "password"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "invokeCode",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "exists",
+                                    "type": "boolean",
+                                    "comments": "{@code true} if Martini has a connection pool with the given name; {@code false} otherwise"
+                                }
+                            ]
+                        }
+                    ],
+                    "className": "io.toro.martini.DatabaseConnectionPoolMethods",
+                    "methodName": "containsConnectionWithName",
+                    "parameters": [
+                        "java.lang.String"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "JDBCConnectionPoolInfo",
+                                "name"
+                            ],
+                            "to": [
+                                "name"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "output"
+                            ],
+                            "to": [
+                                "exists"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "exists",
+                    "children": [
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.DatabaseConnectionPoolMethods",
+                                    "methodName": "savePool",
+                                    "parameters": [
+                                        "io.toro.gloop.object.property.GloopModel"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo"
+                                            ],
+                                            "to": [
+                                                "connectionPoolInfo"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "20",
+                                            "to": [
+                                                "connectionPoolInfo",
+                                                "maxPoolSize"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.DatabaseConnectionPoolMethods",
+                                    "methodName": "startPool",
+                                    "parameters": [
+                                        "java.lang.String"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "name"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tCREATE TABLE \"NOTE\" (\n\t\t\t\"noteId\" INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,\n\t\t\t\"description\" VARCHAR(255),\n\t\t\t\"createdDate\" TIMESTAMP,\n\t\t\t\"modifiedDate\" TIMESTAMP,\n\t\t\t\"taskId\" INTEGER,\n\t\t\t\"userId\" INTEGER\n\t\t);\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tCREATE TABLE \"PROJECT\" (\n\t\t\t\"projectId\" INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,\n\t\t\t\"name\" VARCHAR(255),\n\t\t\t\"code\" VARCHAR(255),\n\t\t\t\"status\" VARCHAR(255),\n\t\t\t\"description\" VARCHAR(255),\n\t\t\t\"deadLine\" TIMESTAMP,\n\t\t\t\"createdDate\" TIMESTAMP,\n\t\t\t\"modifiedDate\" TIMESTAMP\n\t\t);\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tCREATE TABLE \"TASK\" (\n\t\t\t\"taskId\" INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,\n\t\t\t\"subject\" VARCHAR(255),\n\t\t\t\"status\" VARCHAR(255),\n\t\t\t\"description\" VARCHAR(255),\n\t\t\t\"deadline\" TIMESTAMP,\n\t\t\t\"dependencyTask\" INTEGER,\n\t\t\t\"createdDate\" TIMESTAMP,\n\t\t\t\"modifiedDate\" TIMESTAMP,\n\t\t\t\"projectId\" INTEGER,\n\t\t\t\"assignedUserId\" INTEGER\n\t\t);\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tCREATE TABLE \"TIMESHEET\" (\n\t\t\t\"timesheetId\" INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,\n\t\t\t\"description\" VARCHAR(255),\n\t\t\t\"timeLogged\" INTEGER,\n\t\t\t\"createDate\" TIMESTAMP,\n\t\t\t\"modifiedDate\" TIMESTAMP,\n\t\t\t\"taskId\" INTEGER,\n\t\t\t\"userId\" INTEGER\n\t\t);\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tCREATE TABLE \"USER\" (\n\t\t\t\"userId\" INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,\n\t\t\t\"firstName\" VARCHAR(255),\n\t\t\t\"lastName\" VARCHAR(255),\n\t\t\t\"email\" VARCHAR(255),\n\t\t\t\"createdDate\" TIMESTAMP,\n\t\t\t\"modifiedDate\" TIMESTAMP\n\t\t);\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tALTER TABLE \"NOTE\"\n\t\t\t ADD CONSTRAINT \"taskid_note_fkey\" FOREIGN KEY (\"taskId\") REFERENCES \"TASK\" (\"taskId\") ON DELETE CASCADE;\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tALTER TABLE \"NOTE\"\n\t\t\t ADD CONSTRAINT \"userid_note_fkey\" FOREIGN KEY (\"userId\") REFERENCES \"USER\" (\"userId\") ON DELETE CASCADE;\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tALTER TABLE \"TASK\"\n\t\t\t ADD CONSTRAINT \"projectid_task_fkey\" FOREIGN KEY (\"projectId\") REFERENCES \"PROJECT\" (\"projectId\") ON DELETE CASCADE;\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tALTER TABLE \"TASK\"\n\t\t\t ADD CONSTRAINT \"assigneduserid_task_fkey\" FOREIGN KEY (\"assignedUserId\") REFERENCES \"USER\" (\"userId\") ON DELETE CASCADE;\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tALTER TABLE \"TIMESHEET\"\n\t\t\t ADD CONSTRAINT \"taskid_timesheet_fkey\" FOREIGN KEY (\"taskId\") REFERENCES \"TASK\" (\"taskId\") ON DELETE CASCADE;\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeCode",
+                                    "className": "io.toro.martini.SqlMethods",
+                                    "methodName": "sql",
+                                    "parameters": [
+                                        "java.lang.String",
+                                        "groovy.lang.Closure"
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "JDBCConnectionPoolInfo",
+                                                "name"
+                                            ],
+                                            "to": [
+                                                "poolName"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "{ sql -> \n\tsql.execute \"\"\"\n\t\tALTER TABLE \"TIMESHEET\"\n\t\t\t ADD CONSTRAINT \"userid_timesheet_fkey\" FOREIGN KEY (\"userId\") REFERENCES \"USER\" (\"userId\") ON DELETE CASCADE;\n\t\"\"\".toString()\n}",
+                                            "evaluate": true,
+                                            "to": [
+                                                "c"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.config.InitializeDemoData"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

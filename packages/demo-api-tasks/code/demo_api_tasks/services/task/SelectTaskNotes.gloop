@@ -1,0 +1,377 @@
+{
+    "input": [
+        {
+            "name": "taskId",
+            "type": "integer"
+        },
+        {
+            "name": "limit",
+            "type": "integer",
+            "defaultValue": 20
+        },
+        {
+            "name": "offset",
+            "type": "integer",
+            "defaultValue": 0
+        }
+    ],
+    "output": [
+        {
+            "name": "responseCode",
+            "type": "integer",
+            "defaultValue": "200"
+        },
+        {
+            "name": "APIResponse",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIResponse",
+            "gloopProperties": [
+                {
+                    "name": "total",
+                    "type": "integer"
+                },
+                {
+                    "name": "note",
+                    "type": "model",
+                    "array": true,
+                    "reference": "demo_api_tasks.models.Note"
+                }
+            ]
+        },
+        {
+            "name": "APIException",
+            "type": "model",
+            "reference": "io.toro.martini.api.APIException"
+        }
+    ],
+    "steps": [
+        {
+            "type": "block",
+            "blockType": "TRY_CATCH",
+            "children": [
+                {
+                    "type": "invokeGloop",
+                    "name": "demo_api_tasks.services_sql.task.SelectTask",
+                    "declare": [
+                        {
+                            "variables": [
+                                {
+                                    "name": "selectTaskOutput",
+                                    "type": "model",
+                                    "gloopProperties": [
+                                        {
+                                            "name": "taskId",
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "name": "subject"
+                                        },
+                                        {
+                                            "name": "status"
+                                        },
+                                        {
+                                            "name": "description"
+                                        },
+                                        {
+                                            "name": "deadline",
+                                            "type": "date"
+                                        },
+                                        {
+                                            "name": "dependencyTask",
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "name": "createdDate",
+                                            "type": "date"
+                                        },
+                                        {
+                                            "name": "modifiedDate",
+                                            "type": "date"
+                                        },
+                                        {
+                                            "name": "projectId",
+                                            "type": "integer"
+                                        },
+                                        {
+                                            "name": "assignedUserId",
+                                            "type": "integer"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "taskId"
+                            ],
+                            "to": [
+                                "selectTaskInput",
+                                "taskId"
+                            ]
+                        }
+                    ],
+                    "outputs": [
+                        {
+                            "from": [
+                                "selectTaskOutput"
+                            ],
+                            "to": [
+                                "selectTaskOutput"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "fork",
+                    "expression": "selectTaskOutput?.taskId == null",
+                    "children": [
+                        {
+                            "label": "true",
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "404",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "'Task' record not found.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "block",
+                            "label": "false",
+                            "children": [
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.note.SelectAllNoteByTask",
+                                    "declare": [
+                                        {
+                                            "variables": [
+                                                {
+                                                    "name": "selectAllNoteByTaskInputCursor",
+                                                    "type": "model",
+                                                    "array": true,
+                                                    "gloopProperties": [
+                                                        {
+                                                            "name": "noteId",
+                                                            "type": "integer",
+                                                            "required": true,
+                                                            "allowNull": false
+                                                        },
+                                                        {
+                                                            "name": "description",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "createdDate",
+                                                            "type": "date",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "modifiedDate",
+                                                            "type": "date",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "taskId",
+                                                            "type": "integer",
+                                                            "required": true
+                                                        },
+                                                        {
+                                                            "name": "userId",
+                                                            "type": "integer",
+                                                            "required": true
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "taskId"
+                                            ],
+                                            "to": [
+                                                "selectAllNoteByTaskInput",
+                                                "taskId"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "limit"
+                                            ],
+                                            "to": [
+                                                "selectAllNoteByTaskInput",
+                                                "$limit"
+                                            ]
+                                        },
+                                        {
+                                            "from": [
+                                                "offset"
+                                            ],
+                                            "to": [
+                                                "selectAllNoteByTaskInput",
+                                                "offset"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectAllNoteByTaskInputCursor"
+                                            ],
+                                            "to": [
+                                                "selectAllNoteByTaskInputCursor"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "invokeGloop",
+                                    "name": "demo_api_tasks.services_sql.note.SelectCountAllNoteByTask",
+                                    "inputs": [
+                                        {
+                                            "from": [
+                                                "taskId"
+                                            ],
+                                            "to": [
+                                                "selectCountAllNoteByTaskInput",
+                                                "taskId"
+                                            ]
+                                        }
+                                    ],
+                                    "outputs": [
+                                        {
+                                            "from": [
+                                                "selectCountAllNoteByTaskOutput",
+                                                "C1"
+                                            ],
+                                            "to": [
+                                                "APIResponse",
+                                                "total"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "iterate",
+                                    "input": {
+                                        "path": [
+                                            "selectAllNoteByTaskInputCursor"
+                                        ]
+                                    },
+                                    "output": {
+                                        "path": [
+                                            "APIResponse",
+                                            "note"
+                                        ]
+                                    },
+                                    "children": [
+                                        {
+                                            "lines": [
+                                                {
+                                                    "from": [
+                                                        "selectAllNoteByTaskInputCursor"
+                                                    ],
+                                                    "to": [
+                                                        "APIResponse",
+                                                        "note"
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "lines": [
+                                        {
+                                            "type": "set",
+                                            "expression": "200",
+                                            "to": [
+                                                "responseCode"
+                                            ]
+                                        },
+                                        {
+                                            "type": "set",
+                                            "expression": "Successfully processed the request.",
+                                            "to": [
+                                                "APIResponse",
+                                                "message"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "catch": [
+                {
+                    "type": "invokeCode",
+                    "className": "io.toro.martini.LoggerMethods",
+                    "methodName": "error",
+                    "parameters": [
+                        "java.lang.String",
+                        "java.lang.Throwable"
+                    ],
+                    "inputs": [
+                        {
+                            "from": [
+                                "$gloopException",
+                                "gloopStackTrace"
+                            ],
+                            "to": [
+                                "message"
+                            ]
+                        },
+                        {
+                            "from": [
+                                "$gloopException",
+                                "realException"
+                            ],
+                            "to": [
+                                "throwable"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "block",
+                    "children": [
+                        {
+                            "lines": [
+                                {
+                                    "type": "set",
+                                    "expression": "500",
+                                    "to": [
+                                        "responseCode"
+                                    ]
+                                },
+                                {
+                                    "type": "set",
+                                    "expression": "Oh no! An unexpected error occurred.",
+                                    "to": [
+                                        "APIException",
+                                        "message"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

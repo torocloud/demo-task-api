@@ -1,0 +1,52 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "insertTimesheetInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$getGeneratedKeys",
+                    "type": "boolean",
+                    "defaultValue": false
+                },
+                {
+                    "name": "description"
+                },
+                {
+                    "name": "timeLogged",
+                    "type": "integer"
+                },
+                {
+                    "name": "createDate",
+                    "type": "date"
+                },
+                {
+                    "name": "taskId",
+                    "type": "integer"
+                },
+                {
+                    "name": "userId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        },
+        {
+            "name": "generatedKeys",
+            "type": "model",
+            "allowExtraProperties": true
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "INSERT",
+    "query": "INSERT INTO \"TIMESHEET\" (\n\t\"description\",\n\t\"timeLogged\",\n\t\"createDate\",\n\t\"taskId\",\n\t\"userId\"\n) VALUES (\n\t:description,\n\t:timeLogged,\n\t:createDate,\n\t:taskId,\n\t:userId\n)"
+}

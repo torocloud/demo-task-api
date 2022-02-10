@@ -1,0 +1,48 @@
+{
+    "type": "customSql",
+    "input": [
+        {
+            "name": "insertNoteInput",
+            "type": "model",
+            "gloopProperties": [
+                {
+                    "name": "$martiniConnectionPool"
+                },
+                {
+                    "name": "$getGeneratedKeys",
+                    "type": "boolean",
+                    "defaultValue": false
+                },
+                {
+                    "name": "description"
+                },
+                {
+                    "name": "createdDate",
+                    "type": "date"
+                },
+                {
+                    "name": "taskId",
+                    "type": "integer"
+                },
+                {
+                    "name": "userId",
+                    "type": "integer"
+                }
+            ]
+        }
+    ],
+    "output": [
+        {
+            "name": "updateCount",
+            "type": "integer"
+        },
+        {
+            "name": "generatedKeys",
+            "type": "model",
+            "allowExtraProperties": true
+        }
+    ],
+    "connectionPoolName": "demo_api_tasks",
+    "sqlType": "INSERT",
+    "query": "INSERT INTO \"NOTE\" (\n\t\"description\",\n\t\"createdDate\",\n\t\"taskId\",\n\t\"userId\"\n) VALUES (\n\t:description,\n\t:createdDate,\n\t:taskId,\n\t:userId\n)"
+}
