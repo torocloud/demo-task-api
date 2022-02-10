@@ -40,6 +40,8 @@ jobs:
           -d "grant_type=password&username=$USERNAME&password=$PASSWORD&client_id=TOROMartini&client_secret=TOROMartini" \
           "${server_url}/oauth/token" | tr -d '{}' | cut '-d"' -f4)
           
+          echo $access_token
+          
           curl -X POST --http1.1 \
           -d @demo-api-tasks.zip \
           -H "Authorization: Bearer ${access_token}" \
