@@ -32,7 +32,18 @@ jobs:
           zip -qr ../demo-api-tasks.zip demo-api-tasks/*
       - name: Deploy to server
         run: |
-          curl -X POST -d @demo-api-tasks.zip https://toro277.us-east.toroserver.com/esbapi/packages/upload?stateOnCreate=STARTED&replaceExisting=true
+          server_url=https://toro277.us-east.toroserver.com
+        
+          access_token=$(curl -X POST \
+          --write-out "%{json}" \
+          -H "Content-Type: application/x-www-form-urlencoded;charset=utf-8" \
+          -d "grant_type=password&username=${{secrets.TORO_ACCOUNT_USERNAME}}&password=${{secrets.TORO_ACCOUNT_PASSWORD}}&client_id=TOROMartini&client_secret=TOROMartini" \
+          $server_url/oauth/token | tr -d '{}' | cut '-d"' -f4)
+          
+          curl -X POST \
+          -d @demo-api-tasks.zip \
+          -H "Authorization: Bearer ${access_token}"
+          $server_url/esbapi/packages/upload?stateOnCreate=STARTED&replaceExisting=true
       
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v2.3.1
