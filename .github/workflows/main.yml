@@ -45,7 +45,7 @@ jobs:
           "$MARTINI_SERVER_URL/oauth/token" | jq -r .access_token)
           
           # Upload the Martini package zip file
-          echo "[INFO] Uploading Martini package"
+          echo "[INFO] Uploading Martini package..."
           curl -X POST --http1.1 -s --max-time 480 --connect-timeout 240 \
           -F file=@demo-api-tasks.zip \
           -H "Authorization: Bearer ${access_token}" \
