@@ -35,21 +35,19 @@ jobs:
         env:
           USERNAME: ${{ secrets.TORO_ACCOUNT_USERNAME }}
           PASSWORD: ${{ secrets.TORO_ACCOUNT_PASSWORD }}
+          MARTINI_SERVER_URL: https://toro277.us-east.toroserver.com
         run: |
-          # Base url of the server we'll deploy to
-          server_url=https://toro277.us-east.toroserver.com
-        
           # Retrieve the access token
           access_token=$(curl -X POST --http1.1 \
           -H "Content-Type: application/x-www-form-urlencoded" \
           -d "grant_type=password&username=$USERNAME&password=$PASSWORD&client_id=TOROMartini&client_secret=TOROMartini" \
-          "${server_url}/oauth/token" | jq -r .access_token)
+          "$MARTINI_SERVER_URL/oauth/token" | jq -r .access_token)
           
           # Upload the Martini package zip file
           curl -X POST --http1.1 \
           -F file=@demo-api-tasks.zip \
           -H "Authorization: Bearer ${access_token}" \
-          "${server_url}/esbapi/packages/upload?stateOnCreate=STARTED&replaceExisting=true"
+          "$MARTINI_SERVER_URL/esbapi/packages/upload?stateOnCreate=STARTED&replaceExisting=true"
       
       # This step is optional, uploads the Martini package zip file so it can be manually checked
       - name: Upload a Build Artifact
