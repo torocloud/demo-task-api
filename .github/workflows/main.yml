@@ -38,7 +38,7 @@ jobs:
           access_token=$(curl -X POST --http1.1 \
           -H "Content-Type: application/x-www-form-urlencoded" \
           -d "grant_type=password&username=$USERNAME&password=$PASSWORD&client_id=TOROMartini&client_secret=TOROMartini" \
-          "${server_url}/oauth/token" | tr -d '{}' | cut '-d"' -f4)
+          "${server_url}/oauth/token" | jq -r .access_token)
           
           echo $access_token
           
