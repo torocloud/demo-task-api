@@ -24,8 +24,15 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
+      
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Zip Martini package
         run: |
           zip -qr demo-api-tasks.zip packages/demo-api-tasks/*
+          ls -la
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2.3.1
+        with:
+          path: demo-api-tasks.zip
+          if-no-files-found: error
