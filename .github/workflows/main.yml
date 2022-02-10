@@ -35,12 +35,12 @@ jobs:
         run: |
           server_url=https://toro277.us-east.toroserver.com
         
-          access_token=$(curl -X POST \
+          access_token=$(curl -X POST --http1.1 \
           -H "Content-Type: application/x-www-form-urlencoded" \
           -d "grant_type=password&username=$USERNAME&password=$PASSWORD&client_id=TOROMartini&client_secret=TOROMartini" \
           "${server_url}/oauth/token" | tr -d '{}' | cut '-d"' -f4)
           
-          curl -X POST \
+          curl -X POST --http1.1 \
           -d @demo-api-tasks.zip \
           -H "Authorization: Bearer ${access_token}" \
           "${server_url}/esbapi/packages/upload?stateOnCreate=STARTED&replaceExisting=true"
