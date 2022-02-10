@@ -35,7 +35,7 @@ jobs:
         env:
           USERNAME: ${{ secrets.TORO_ACCOUNT_USERNAME }}
           PASSWORD: ${{ secrets.TORO_ACCOUNT_PASSWORD }}
-          MARTINI_SERVER_URL: https://toro277.us-east.toroserver.com
+          MARTINI_SERVER_URL: https://toro278.us-east.toroserver.com
         run: |
           # Retrieve the access token
           access_token=$(curl -X POST --http1.1 \
