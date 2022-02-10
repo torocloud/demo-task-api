@@ -16,27 +16,28 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  deployment:
+    environment: prod
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
       
-      # Runs a set of commands using the runners shell
       - name: Zip Martini package
         run: |
           cd packages
           zip -qr ../demo-api-tasks.zip demo-api-tasks/*
+          
       - name: Deploy to server
+        env:
+          USERNAME: ${{ secrets.TORO_ACCOUNT_USERNAME }}
+          PASSWORD: ${{ secrets.TORO_ACCOUNT_PASSWORD }}
         run: |
           server_url=https://toro277.us-east.toroserver.com
         
           curl -X POST \
-          -H "Content-Type: application/x-www-form-urlencoded;charset=utf-8" \
-          -d "grant_type=password&username=${{secrets.TORO_ACCOUNT_USERNAME}}&password=${{secrets.TORO_ACCOUNT_PASSWORD}}&client_id=TOROMartini&client_secret=TOROMartini" \
+          -H "Content-Type: application/x-www-form-urlencoded" \
+          -d "grant_type=password&username=$USERNAME&password=$PASSWORD&client_id=TOROMartini&client_secret=TOROMartini" \
           "${server_url}/oauth/token"
           
           curl -X POST \
