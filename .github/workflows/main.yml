@@ -44,7 +44,7 @@ jobs:
           "$MARTINI_SERVER_URL/oauth/token" | jq -r .access_token)
           
           # Upload the Martini package zip file
-          curl -X POST --http1.1 --max-time 480 --connection-timeout 240 \
+          curl -X POST --http1.1 --max-time 480 --connect-timeout 240 \
           -F file=@demo-api-tasks.zip \
           -H "Authorization: Bearer ${access_token}" \
           "$MARTINI_SERVER_URL/esbapi/packages/upload?stateOnCreate=STARTED&replaceExisting=true"
